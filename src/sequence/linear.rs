@@ -1,16 +1,21 @@
 use super::sequence::Sequence;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Linear {
     start: i32,
-    increment: i32,
+    step: i32,
+}
+
+impl Linear {
+    pub fn new(start: i32, step: i32) -> Self {
+        Linear { start, step }
+    }
 }
 
 impl Sequence<'_> for Linear {
-    fn iter(&self) -> _ {
-        (self.start..).map(|x| x * self.increment)
+    fn iter(&self) -> Box<dyn Iterator<Item = i32> + '_> {
+        Box::new((0..).map(|x| x * self.step + self.start))
     }
-
 }
 
 impl TryFrom<&[i32]> for Linear {
@@ -28,7 +33,7 @@ impl TryFrom<&[i32]> for Linear {
         }
         Ok(Linear {
             start: value[0],
-            increment: diff,
+            step: diff,
         })
     }
 }
@@ -38,5 +43,21 @@ impl Iterator for Linear {
 
     fn next(&mut self) -> Option<Self::Item> {
         Some(0)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_linear() {
+        let linear = Linear::new(1, 2);
+        let mut iter = linear.iter();
+        assert_eq!(iter.next(), Some(1));
+        assert_eq!(iter.next(), Some(3));
+        assert_eq!(iter.next(), Some(5));
+        assert_eq!(iter.next(), Some(7));
+        assert_eq!(iter.next(), Some(9));
     }
 }
