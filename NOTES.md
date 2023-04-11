@@ -2,18 +2,17 @@
 
 - Default to the simplest rule.
 
-**Types of rules**
-- Even, Odd series
-- Difference is common number (Arithemetic progression)
-- Multiplication by common number (Geometric progression)
-- Prime series
-- Square series
-- Cube series
+**Types of sequences**
+- Arithmetic
+- Geometric
+- Recursive
 - Some Power series
 - Fibonacci series
 - Factorial series
 - Rotate each digit
-
+- "cultural"
+  - Digits of pi, e, golden ratio, etc.
+  - Primes, composites
 
 
 ## Links
