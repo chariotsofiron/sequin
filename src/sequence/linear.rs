@@ -1,4 +1,4 @@
-use super::sequence::Sequence;
+use super::sequence::{IdentifiableSequence, Sequence};
 
 #[derive(Debug, PartialEq)]
 pub struct Linear {
@@ -12,11 +12,15 @@ impl Linear {
     }
 }
 
-impl Sequence<'_> for Linear {
-    fn iter(&self) -> Box<dyn Iterator<Item = i32> + '_> {
-        Box::new((0..).map(|x| x * self.step + self.start))
+impl Sequence for Linear {
+    fn iter(&self) -> Box<dyn Iterator<Item = i32>> {
+        let start = self.start;
+        let step = self.step;
+        Box::new((0..).map(move |x| x * step + start))
     }
 }
+
+impl IdentifiableSequence for Linear {}
 
 impl TryFrom<&[i32]> for Linear {
     type Error = ();
@@ -38,13 +42,6 @@ impl TryFrom<&[i32]> for Linear {
     }
 }
 
-impl Iterator for Linear {
-    type Item = i32;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        Some(0)
-    }
-}
 
 #[cfg(test)]
 mod tests {

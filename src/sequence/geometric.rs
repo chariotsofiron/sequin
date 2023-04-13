@@ -12,9 +12,11 @@ impl Geometric {
     }
 }
 
-impl Sequence<'_> for Geometric {
-    fn iter(&self) -> Box<dyn Iterator<Item = i32> + '_> {
-        Box::new((0..).map(|x| self.factor.pow(x as u32) * self.start))
+impl Sequence for Geometric {
+    fn iter(&self) -> Box<dyn Iterator<Item = i32>> {
+        let factor = self.factor;
+        let start = self.start;
+        Box::new((0..).map(move |x| factor.pow(x as u32) * start))
     }
 }
 
