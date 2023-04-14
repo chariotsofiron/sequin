@@ -1,6 +1,6 @@
 use crate::Fraction;
 
-use super::sequence::Sequence;
+use super::{binom::Binom, differences::Differences, sequence::Sequence};
 
 #[derive(Debug, PartialEq)]
 pub struct Zipped {
@@ -21,7 +21,7 @@ impl TryFrom<&[Fraction]> for Zipped {
 
     fn try_from(value: &[Fraction]) -> Result<Self, Self::Error> {
         let mut seqs: Vec<Sequence> = Vec::new();
-        for i in 1..4 {
+        for i in 1..value.len() {
             for j in 0..i {
                 let tmp = value
                     .iter()
@@ -29,8 +29,10 @@ impl TryFrom<&[Fraction]> for Zipped {
                     .step_by(i)
                     .copied()
                     .collect::<Vec<Fraction>>();
-                if let Ok(seq) = Sequence::try_from(tmp.as_slice()) {
-                    seqs.push(seq);
+                if let Ok(seq) = Binom::try_from(tmp.as_slice()) {
+                    seqs.push(Sequence::Binom(seq));
+                } else if let Ok(seq) = Differences::try_from(tmp.as_slice()) {
+                    seqs.push(Sequence::Differences(seq));
                 } else {
                     seqs.clear();
                     break;

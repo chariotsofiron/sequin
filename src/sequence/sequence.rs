@@ -2,8 +2,6 @@ use crate::Fraction;
 
 use super::{binom::Binom, differences::Differences, zipped::Zipped};
 
-pub enum SimpleSequence;
-
 #[derive(Debug, PartialEq)]
 pub enum Sequence {
     Binom(Binom),
@@ -97,37 +95,52 @@ mod tests {
                     b: Fraction::from(0),
                 }),
             ),
-            // zipped binomial
             (
+                // zipped binomial
                 frac![2, 5, 6, 20, 18, 80, 54, 320, 162, 1280, 486],
                 Sequence::Zipped(Zipped {
                     seqs: vec![
                         Sequence::Binom(Binom {
                             start: Fraction::from(2),
                             a: Fraction::from(3),
-                            b: Fraction::from(-1),
+                            b: Fraction::from(0),
                         }),
                         Sequence::Binom(Binom {
                             start: Fraction::from(5),
                             a: Fraction::from(4),
-                            b: Fraction::from(-1),
+                            b: Fraction::from(0),
                         }),
                     ],
                 }),
             ),
             // differences
             (
+                // 2nd differences converge
                 frac![-3, 3, 27, 69, 129, 207],
                 Sequence::Differences(Differences {
                     diffs: frac![-3, 6, 18],
                 }),
             ),
             (
+                // 3rd differences converge
                 frac![9, 73, 241, 561, 1081, 1849, 2913],
                 Sequence::Differences(Differences {
                     diffs: frac![9, 64, 104, 48],
                 }),
             ),
+            // (
+            //     frac![2, 0, 1, 3, 4, 2, 3, 5, 6, 4, 5, 7, 8, 6],
+            //     Sequence::Zipped(Zipped {
+            //         seqs: vec![
+            //             Sequence::Differences(Differences {
+            //                 diffs: frac![2],
+            //             }),
+            //             Sequence::Differences(Differences {
+            //                 diffs: frac![0, 1, 2, -2, 1, 2, 1, -2, 1, 2, 1, -2],
+            //             }),
+            //         ],
+            //     }),
+            // )
         ];
 
         for (input, expected) in test_case.into_iter() {

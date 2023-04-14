@@ -1,5 +1,8 @@
 use crate::Fraction;
 
+const NUMERATOR_RANGE: std::ops::RangeInclusive<i32> = -10..=10;
+const DENOMINATOR_RANGE: std::ops::RangeInclusive<i32> = 1..=10;
+
 /// Sequences where the next term is ax+b where x
 /// is the previous term and a and b are constants.
 /// Covers the linear sequence case.
@@ -18,19 +21,17 @@ impl TryFrom<&[Fraction]> for Binom {
             return Err(());
         }
 
-        for num in -10..10 {
-            for denom in 1..10 {
+        for num in NUMERATOR_RANGE {
+            for denom in DENOMINATOR_RANGE {
                 let a = Fraction::from(num) / Fraction::from(denom);
-                for offset in -10..10 {
+                for offset in NUMERATOR_RANGE {
                     let b = Fraction::from(offset);
-                    let mut prev = value[0];
                     let mut ok = true;
-                    for &next in value.iter().skip(1) {
-                        if a * prev + b != next {
+                    for w in value.windows(2) {
+                        if a * w[0] + b != w[1] {
                             ok = false;
                             break;
                         }
-                        prev = next;
                     }
                     if ok {
                         return Ok(Binom {
