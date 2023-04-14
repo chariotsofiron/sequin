@@ -2,7 +2,7 @@ use crate::Fraction;
 
 #[derive(Debug, PartialEq)]
 pub struct Differences {
-    diffs: Vec<Fraction>,
+    pub diffs: Vec<Fraction>,
 }
 
 impl Iterator for Differences {
@@ -38,44 +38,5 @@ impl TryFrom<&[Fraction]> for Differences {
             diffs = diffs.windows(2).map(|w| w[1] - w[0]).collect();
         }
         Err(())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_differences() {
-        let nums = [-3, 3, 27, 69, 129, 207];
-        let nums = nums.iter().map(|&x| Fraction::from(x)).collect::<Vec<_>>();
-        let diffs = Differences::try_from(nums.as_slice());
-        assert_eq!(
-            diffs,
-            Ok(Differences {
-                diffs: vec![Fraction::from(-3), Fraction::from(6), Fraction::from(18)],
-            })
-        );
-
-        let nums = [9, 73, 241, 561, 1081, 1849, 2913];
-        let nums = nums.iter().map(|&x| Fraction::from(x)).collect::<Vec<_>>();
-        let diffs = Differences::try_from(nums.as_slice()).unwrap();
-        assert_eq!(
-            diffs,
-            Differences {
-                diffs: vec![
-                    Fraction::from(9),
-                    Fraction::from(64),
-                    Fraction::from(104),
-                    Fraction::from(48)
-                ],
-            }
-        );
-
-        let mut iter = diffs.into_iter();
-        assert_eq!(iter.next(), Some(Fraction::from(9)));
-        assert_eq!(iter.next(), Some(Fraction::from(73)));
-        assert_eq!(iter.next(), Some(Fraction::from(241)));
-        assert_eq!(iter.next(), Some(Fraction::from(561)));
     }
 }
