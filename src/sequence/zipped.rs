@@ -1,4 +1,4 @@
-use crate::{util::Multizip, Fraction};
+use crate::Fraction;
 
 use super::sequence::SimpleSequence;
 
@@ -48,19 +48,50 @@ impl TryFrom<&[Fraction]> for Zipped {
     }
 }
 
+/// An iterator that zips together multiple iterators.
+pub struct Multizip {
+    seqs: Vec<Box<dyn Iterator<Item = Fraction>>>,
+    index: usize,
+}
+
+impl Multizip {
+    pub fn new(seqs: Vec<Box<dyn Iterator<Item = Fraction>>>) -> Self {
+        Self { seqs, index: 0 }
+    }
+}
+
+impl Iterator for Multizip {
+    type Item = Fraction;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.seqs.is_empty() {
+            return None;
+        }
+        loop {
+            match self.seqs[self.index].next() {
+                Some(x) => {
+                    self.index = (self.index + 1) % self.seqs.len();
+                    return Some(x);
+                }
+                None => {
+                    let _ = self.seqs.remove(self.index);
+                }
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_zipped() {
-
         let nums = [2, 5, 6, 20, 18, 80, 54, 320, 162, 1280, 486];
         let nums = nums.iter().map(|x| Fraction::from(*x)).collect::<Vec<_>>();
         let zipped = Zipped::try_from(nums.as_slice()).unwrap();
         let ans = zipped.into_iter().take(nums.len()).collect::<Vec<_>>();
         assert_eq!(ans, nums);
-
     }
 
     #[test]
@@ -73,5 +104,12 @@ mod tests {
         let binom = Zipped::try_from(nums.as_slice()).unwrap();
         let result: Vec<_> = binom.into_iter().take(nums.len()).collect();
         assert_eq!(result, nums);
+    }
+
+    #[test]
+    fn test3() {
+        let nums = [2, 0, 1, 3, 4, 2, 3, 5, 6, 4, 5, 7, 8, 6];
+        let nums = nums.iter().map(|x| Fraction::from(*x)).collect::<Vec<_>>();
+        let zipped = Zipped::try_from(nums.as_slice()).unwrap();
     }
 }

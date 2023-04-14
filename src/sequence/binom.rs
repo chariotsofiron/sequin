@@ -2,40 +2,12 @@ use crate::Fraction;
 
 /// Sequences where the next term is ax+b where x
 /// is the previous term and a and b are constants.
+/// Covers the linear sequence case.
 #[derive(Debug, PartialEq)]
 pub struct Binom {
     start: Fraction,
     a: Fraction,
     b: Fraction,
-}
-
-pub struct BinomIter {
-    current: Fraction,
-    a: Fraction,
-    b: Fraction,
-}
-
-impl Iterator for BinomIter {
-    type Item = Fraction;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let ans = self.current;
-        self.current = self.a * self.current + self.b;
-        Some(ans)
-    }
-}
-
-impl IntoIterator for Binom {
-    type Item = Fraction;
-    type IntoIter = BinomIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        BinomIter {
-            current: self.start,
-            a: self.a,
-            b: self.b,
-        }
-    }
 }
 
 impl TryFrom<&[Fraction]> for Binom {
@@ -71,6 +43,16 @@ impl TryFrom<&[Fraction]> for Binom {
             }
         }
         Err(())
+    }
+}
+
+impl Iterator for Binom {
+    type Item = Fraction;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let ans = self.start;
+        self.start = self.a * self.start + self.b;
+        Some(ans)
     }
 }
 
@@ -139,6 +121,14 @@ mod tests {
             .map(|x| Fraction::from(*x))
             .collect::<Vec<Fraction>>();
         let binom = Binom::try_from(nums.as_slice()).unwrap();
+        assert_eq!(
+            binom,
+            Binom {
+                start: Fraction::from(3),
+                a: Fraction::from(3),
+                b: Fraction::from(-1),
+            }
+        );
         let result: Vec<_> = binom.into_iter().take(nums.len()).collect();
         assert_eq!(result, nums);
     }

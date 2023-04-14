@@ -106,6 +106,9 @@ The primes: a(n) = prime(n+1)
 The cubes: 1^3, 2^3, 3^3, 4^3, 5^3, 6^3
 
 
+## 3, 4, 6, 8, 12, 14
+
+primes + 1
 
 # Prev term with n expression
 
