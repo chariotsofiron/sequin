@@ -5,9 +5,9 @@ use crate::Fraction;
 /// Covers the linear sequence case.
 #[derive(Debug, PartialEq)]
 pub struct Binom {
-    start: Fraction,
-    a: Fraction,
-    b: Fraction,
+    pub start: Fraction,
+    pub a: Fraction,
+    pub b: Fraction,
 }
 
 impl TryFrom<&[Fraction]> for Binom {

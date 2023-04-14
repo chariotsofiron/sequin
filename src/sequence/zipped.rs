@@ -1,10 +1,10 @@
 use crate::Fraction;
 
-use super::sequence::SimpleSequence;
+use super::sequence::Sequence;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Zipped {
-    seqs: Vec<SimpleSequence>,
+    seqs: Vec<Sequence>,
 }
 
 impl IntoIterator for Zipped {
@@ -20,7 +20,7 @@ impl TryFrom<&[Fraction]> for Zipped {
     type Error = ();
 
     fn try_from(value: &[Fraction]) -> Result<Self, Self::Error> {
-        let mut seqs: Vec<SimpleSequence> = Vec::new();
+        let mut seqs: Vec<Sequence> = Vec::new();
         for i in 1..value.len() {
             for j in 0..i {
                 let tmp = value
@@ -29,7 +29,7 @@ impl TryFrom<&[Fraction]> for Zipped {
                     .step_by(i)
                     .copied()
                     .collect::<Vec<Fraction>>();
-                if let Ok(seq) = SimpleSequence::try_from(tmp.as_slice()) {
+                if let Ok(seq) = Sequence::try_from(tmp.as_slice()) {
                     seqs.push(seq);
                 } else {
                     seqs.clear();
