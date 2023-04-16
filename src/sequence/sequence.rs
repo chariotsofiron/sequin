@@ -4,8 +4,8 @@ use super::{binom::Binom, differences::Differences, zipped::Zipped};
 
 #[derive(Debug, PartialEq)]
 pub enum Sequence {
-    Binom(Binom),
     Differences(Differences),
+    Binom(Binom),
     Zipped(Zipped),
 }
 
@@ -15,8 +15,8 @@ impl IntoIterator for Sequence {
 
     fn into_iter(self) -> Self::IntoIter {
         match self {
-            Self::Binom(seq) => Box::new(seq.into_iter()),
             Self::Differences(seq) => Box::new(seq.into_iter()),
+            Self::Binom(seq) => Box::new(seq.into_iter()),
             Self::Zipped(seq) => Box::new(seq.into_iter()),
         }
     }
@@ -26,10 +26,10 @@ impl TryFrom<&[Fraction]> for Sequence {
     type Error = ();
 
     fn try_from(value: &[Fraction]) -> Result<Self, Self::Error> {
-        if let Ok(seq) = Binom::try_from(value) {
-            return Ok(Self::Binom(seq));
-        } else if let Ok(seq) = Differences::try_from(value) {
+        if let Ok(seq) = Differences::try_from(value) {
             return Ok(Self::Differences(seq));
+        } else if let Ok(seq) = Binom::try_from(value) {
+            return Ok(Self::Binom(seq));
         } else if let Ok(seq) = Zipped::try_from(value) {
             return Ok(Self::Zipped(seq));
         }
@@ -39,6 +39,10 @@ impl TryFrom<&[Fraction]> for Sequence {
 
 #[cfg(test)]
 mod tests {
+    use super::Fraction;
+    use super::Sequence;
+    use super::*;
+    use crate::sequence::{differences::Differences, zipped::Zipped};
 
     macro_rules! frac {
         ( $( $x:expr ),* ) => {
@@ -50,10 +54,7 @@ mod tests {
 
     #[test]
     fn test_seqs() {
-        use super::Fraction;
-        use super::*;
-
-        let test_case = [
+        let test_cases = [
             // binomial
             (
                 frac![3, 8, 23, 68, 203],
@@ -113,37 +114,91 @@ mod tests {
                     ],
                 }),
             ),
+            (
+                // 1st differences converge
+                frac![1, 2, 3],
+                Sequence::Differences(Differences { terms: frac![1, 1] }),
+            ),
             // differences
             (
                 // 2nd differences converge
                 frac![-3, 3, 27, 69, 129, 207],
                 Sequence::Differences(Differences {
-                    diffs: frac![-3, 6, 18],
+                    terms: frac![-3, 6, 18],
                 }),
             ),
             (
                 // 3rd differences converge
                 frac![9, 73, 241, 561, 1081, 1849, 2913],
                 Sequence::Differences(Differences {
-                    diffs: frac![9, 64, 104, 48],
+                    terms: frac![9, 64, 104, 48],
                 }),
             ),
-            // (
-            //     frac![2, 0, 1, 3, 4, 2, 3, 5, 6, 4, 5, 7, 8, 6],
-            //     Sequence::Zipped(Zipped {
-            //         seqs: vec![
-            //             Sequence::Differences(Differences {
-            //                 diffs: frac![2],
-            //             }),
-            //             Sequence::Differences(Differences {
-            //                 diffs: frac![0, 1, 2, -2, 1, 2, 1, -2, 1, 2, 1, -2],
-            //             }),
-            //         ],
-            //     }),
-            // )
+            (
+                // 4 zipped linear sequences
+                frac![2, 0, 1, 3, 4, 2, 3, 5, 6, 4, 5, 7, 8, 6],
+                Sequence::Zipped(Zipped {
+                    seqs: vec![
+                        Sequence::Differences(Differences {
+                            terms: frac![2, 2],
+                        }),
+                        Sequence::Differences(Differences {
+                            terms: frac![0, 2],
+                        }),
+                        Sequence::Differences(Differences {
+                            terms: frac![1, 2],
+                        }),
+                        Sequence::Differences(Differences {
+                            terms: frac![3, 2],
+                        }),
+                    ],
+                }),
+            ),
+            (
+                // 3 zipped linear sequences
+                frac![31, 23, 15, 27, 20, 13, 23, 17, 11, 19, 14, 9],
+                Sequence::Zipped(Zipped {
+                    seqs: vec![
+                        Sequence::Differences(Differences {
+                            terms: frac![31, -4],
+                        }),
+                        Sequence::Differences(Differences {
+                            terms: frac![23, -3],
+                        }),
+                        Sequence::Differences(Differences {
+                            terms: frac![15, -2],
+                        }),
+                    ],
+                }),
+            ),
         ];
 
-        for (input, expected) in test_case.into_iter() {
+        for (input, expected) in test_cases.into_iter() {
+            let seq = Sequence::try_from(input.as_slice()).unwrap();
+            assert_eq!(seq, expected);
+            assert_eq!(seq.into_iter().take(input.len()).collect::<Vec<_>>(), input);
+        }
+    }
+
+    #[test]
+    fn test_one() {
+        let test_cases = [(
+            frac![31, 23, 15, 27, 20, 13, 23, 17, 11, 19, 14, 9],
+            Sequence::Zipped(Zipped {
+                seqs: vec![
+                    Sequence::Differences(Differences {
+                        terms: frac![31, -4],
+                    }),
+                    Sequence::Differences(Differences {
+                        terms: frac![23, -3],
+                    }),
+                    Sequence::Differences(Differences {
+                        terms: frac![15, -2],
+                    }),
+                ],
+            }),
+        )];
+        for (input, expected) in test_cases.into_iter() {
             let seq = Sequence::try_from(input.as_slice()).unwrap();
             assert_eq!(seq, expected);
             assert_eq!(seq.into_iter().take(input.len()).collect::<Vec<_>>(), input);

@@ -1,20 +1,17 @@
 use crate::Fraction;
 
-const N_DIFFERENCE_TERMS: usize = 3;
-
 #[derive(Debug, PartialEq)]
 pub struct Differences {
-    pub diffs: Vec<Fraction>,
+    pub terms: Vec<Fraction>,
 }
 
 impl Iterator for Differences {
     type Item = Fraction;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let next = self.diffs[0];
-
-        for i in 1..self.diffs.len() {
-            self.diffs[i - 1] = self.diffs[i - 1] + self.diffs[i];
+        let next = self.terms[0];
+        for i in 1..self.terms.len() {
+            self.terms[i - 1] = self.terms[i - 1] + self.terms[i];
         }
         Some(next)
     }
@@ -27,17 +24,14 @@ impl TryFrom<&[Fraction]> for Differences {
         if value.len() < 3 {
             return Err(());
         }
-        // this vec of nums defines the sequence
-        let mut nums = Vec::<Fraction>::new();
-        nums.push(value[0]);
-        let mut differences: Vec<Fraction> = value.windows(2).map(|w| w[1] - w[0]).collect();
-        for _ in 0..N_DIFFERENCE_TERMS {
-            nums.push(differences[0]);
-            if differences.windows(2).all(|w| w[0] == w[1]) {
-                return Ok(Differences { diffs: nums });
-            }
-            // compute next differences
+        let mut terms = vec![value[0]];
+        let mut differences: Vec<Fraction> = value.to_vec();
+        for _ in 0..value.len() - 2 {
             differences = differences.windows(2).map(|w| w[1] - w[0]).collect();
+            terms.push(differences[0]);
+            if differences.windows(2).all(|w| w[0] == w[1]) {
+                return Ok(Differences { terms });
+            }
         }
         Err(())
     }

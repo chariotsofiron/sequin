@@ -21,7 +21,7 @@ impl TryFrom<&[Fraction]> for Zipped {
 
     fn try_from(value: &[Fraction]) -> Result<Self, Self::Error> {
         let mut seqs: Vec<Sequence> = Vec::new();
-        for i in 1..value.len() {
+        for i in 2..value.len() {
             for j in 0..i {
                 let tmp = value
                     .iter()
@@ -29,10 +29,10 @@ impl TryFrom<&[Fraction]> for Zipped {
                     .step_by(i)
                     .copied()
                     .collect::<Vec<Fraction>>();
-                if let Ok(seq) = Binom::try_from(tmp.as_slice()) {
-                    seqs.push(Sequence::Binom(seq));
-                } else if let Ok(seq) = Differences::try_from(tmp.as_slice()) {
+                if let Ok(seq) = Differences::try_from(tmp.as_slice()) {
                     seqs.push(Sequence::Differences(seq));
+                } else if let Ok(seq) = Binom::try_from(tmp.as_slice()) {
+                    seqs.push(Sequence::Binom(seq));
                 } else {
                     seqs.clear();
                     break;
