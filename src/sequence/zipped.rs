@@ -1,4 +1,4 @@
-use crate::Fraction;
+use crate::Term;
 
 use super::{binom::Binom, differences::Differences, sequence::Sequence};
 
@@ -8,7 +8,7 @@ pub struct Zipped {
 }
 
 impl IntoIterator for Zipped {
-    type Item = Fraction;
+    type Item = Term;
     type IntoIter = Multizip;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -16,10 +16,10 @@ impl IntoIterator for Zipped {
     }
 }
 
-impl TryFrom<&[Fraction]> for Zipped {
+impl TryFrom<&[Term]> for Zipped {
     type Error = ();
 
-    fn try_from(value: &[Fraction]) -> Result<Self, Self::Error> {
+    fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         let mut seqs: Vec<Sequence> = Vec::new();
         for i in 2..value.len() {
             for j in 0..i {
@@ -28,7 +28,7 @@ impl TryFrom<&[Fraction]> for Zipped {
                     .skip(j)
                     .step_by(i)
                     .copied()
-                    .collect::<Vec<Fraction>>();
+                    .collect::<Vec<Term>>();
                 if let Ok(seq) = Differences::try_from(tmp.as_slice()) {
                     seqs.push(Sequence::Differences(seq));
                 } else if let Ok(seq) = Binom::try_from(tmp.as_slice()) {
@@ -52,18 +52,18 @@ impl TryFrom<&[Fraction]> for Zipped {
 
 /// An iterator that zips together multiple iterators.
 pub struct Multizip {
-    seqs: Vec<Box<dyn Iterator<Item = Fraction>>>,
+    seqs: Vec<Box<dyn Iterator<Item = Term>>>,
     index: usize,
 }
 
 impl Multizip {
-    pub fn new(seqs: Vec<Box<dyn Iterator<Item = Fraction>>>) -> Self {
+    pub fn new(seqs: Vec<Box<dyn Iterator<Item = Term>>>) -> Self {
         Self { seqs, index: 0 }
     }
 }
 
 impl Iterator for Multizip {
-    type Item = Fraction;
+    type Item = Term;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.seqs.is_empty() {

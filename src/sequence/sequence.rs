@@ -1,4 +1,4 @@
-use crate::Fraction;
+use crate::Term;
 
 use super::{binom::Binom, differences::Differences, zipped::Zipped};
 
@@ -10,8 +10,8 @@ pub enum Sequence {
 }
 
 impl IntoIterator for Sequence {
-    type Item = Fraction;
-    type IntoIter = Box<dyn Iterator<Item = Fraction>>;
+    type Item = Term;
+    type IntoIter = Box<dyn Iterator<Item = Term>>;
 
     fn into_iter(self) -> Self::IntoIter {
         match self {
@@ -22,10 +22,10 @@ impl IntoIterator for Sequence {
     }
 }
 
-impl TryFrom<&[Fraction]> for Sequence {
+impl TryFrom<&[Term]> for Sequence {
     type Error = ();
 
-    fn try_from(value: &[Fraction]) -> Result<Self, Self::Error> {
+    fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         if let Ok(seq) = Differences::try_from(value) {
             return Ok(Self::Differences(seq));
         } else if let Ok(seq) = Binom::try_from(value) {
@@ -39,15 +39,15 @@ impl TryFrom<&[Fraction]> for Sequence {
 
 #[cfg(test)]
 mod tests {
-    use super::Fraction;
     use super::Sequence;
+    use super::Term;
     use super::*;
     use crate::sequence::{differences::Differences, zipped::Zipped};
 
     macro_rules! frac {
         ( $( $x:expr ),* ) => {
             vec![
-                $( Fraction::from($x), )*
+                $( Term::from($x), )*
             ]
         };
     }
@@ -59,41 +59,41 @@ mod tests {
             (
                 frac![3, 8, 23, 68, 203],
                 Sequence::Binom(Binom {
-                    start: Fraction::from(3),
-                    a: Fraction::from(3),
-                    b: Fraction::from(-1),
+                    start: Term::from(3),
+                    a: Term::from(3),
+                    b: Term::from(-1),
                 }),
             ),
             (
                 frac![18, 108, 648, 3888],
                 Sequence::Binom(Binom {
-                    start: Fraction::from(18),
-                    a: Fraction::from(6),
-                    b: Fraction::from(0),
+                    start: Term::from(18),
+                    a: Term::from(6),
+                    b: Term::from(0),
                 }),
             ),
             (
                 frac![68, 36, 20, 12, 8],
                 Sequence::Binom(Binom {
-                    start: Fraction::from(68),
-                    a: Fraction::new(1, 2),
-                    b: Fraction::from(2),
+                    start: Term::from(68),
+                    a: Term::new(1, 2),
+                    b: Term::from(2),
                 }),
             ),
             (
                 frac![8, 20, 50, 125],
                 Sequence::Binom(Binom {
-                    start: Fraction::from(8),
-                    a: Fraction::new(5, 2),
-                    b: Fraction::from(0),
+                    start: Term::from(8),
+                    a: Term::new(5, 2),
+                    b: Term::from(0),
                 }),
             ),
             (
                 frac![4, -8, 16, -32],
                 Sequence::Binom(Binom {
-                    start: Fraction::from(4),
-                    a: Fraction::from(-2),
-                    b: Fraction::from(0),
+                    start: Term::from(4),
+                    a: Term::from(-2),
+                    b: Term::from(0),
                 }),
             ),
             (
@@ -102,14 +102,14 @@ mod tests {
                 Sequence::Zipped(Zipped {
                     seqs: vec![
                         Sequence::Binom(Binom {
-                            start: Fraction::from(2),
-                            a: Fraction::from(3),
-                            b: Fraction::from(0),
+                            start: Term::from(2),
+                            a: Term::from(3),
+                            b: Term::from(0),
                         }),
                         Sequence::Binom(Binom {
-                            start: Fraction::from(5),
-                            a: Fraction::from(4),
-                            b: Fraction::from(0),
+                            start: Term::from(5),
+                            a: Term::from(4),
+                            b: Term::from(0),
                         }),
                     ],
                 }),
@@ -139,18 +139,10 @@ mod tests {
                 frac![2, 0, 1, 3, 4, 2, 3, 5, 6, 4, 5, 7, 8, 6],
                 Sequence::Zipped(Zipped {
                     seqs: vec![
-                        Sequence::Differences(Differences {
-                            terms: frac![2, 2],
-                        }),
-                        Sequence::Differences(Differences {
-                            terms: frac![0, 2],
-                        }),
-                        Sequence::Differences(Differences {
-                            terms: frac![1, 2],
-                        }),
-                        Sequence::Differences(Differences {
-                            terms: frac![3, 2],
-                        }),
+                        Sequence::Differences(Differences { terms: frac![2, 2] }),
+                        Sequence::Differences(Differences { terms: frac![0, 2] }),
+                        Sequence::Differences(Differences { terms: frac![1, 2] }),
+                        Sequence::Differences(Differences { terms: frac![3, 2] }),
                     ],
                 }),
             ),

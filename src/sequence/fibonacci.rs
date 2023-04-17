@@ -7,13 +7,13 @@ const DENOMINATOR_RANGE: std::ops::RangeInclusive<i32> = 1..=10;
 /// is the previous term and a and b are constants.
 /// Covers the linear sequence case.
 #[derive(Debug, PartialEq)]
-pub struct Binom {
-    pub start: Term,
+pub struct Fibonacci {
+    pub start: Vec<Term>,
     pub a: Term,
     pub b: Term,
 }
 
-impl TryFrom<&[Term]> for Binom {
+impl TryFrom<&[Term]> for Fibonacci {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
@@ -33,26 +33,9 @@ impl TryFrom<&[Term]> for Binom {
                             break;
                         }
                     }
-                    if ok {
-                        return Ok(Binom {
-                            start: Term::from(value[0]),
-                            a,
-                            b,
-                        });
-                    }
                 }
             }
         }
         Err(())
-    }
-}
-
-impl Iterator for Binom {
-    type Item = Term;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let ans = self.start;
-        self.start = self.a * self.start + self.b;
-        Some(ans)
     }
 }
