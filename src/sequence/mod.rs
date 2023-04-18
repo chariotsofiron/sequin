@@ -1,3 +1,4 @@
+pub mod alternator;
 pub mod binom;
 pub mod differences;
 pub mod fibonacci;

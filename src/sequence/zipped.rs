@@ -1,6 +1,6 @@
 use crate::Term;
 
-use super::{binom::Binom, differences::Differences, sequence::Sequence};
+use super::{binom::Binomial, differences::Differences, sequence::Sequence};
 
 #[derive(Debug, PartialEq)]
 pub struct Zipped {
@@ -31,7 +31,7 @@ impl TryFrom<&[Term]> for Zipped {
                     .collect::<Vec<Term>>();
                 if let Ok(seq) = Differences::try_from(tmp.as_slice()) {
                     seqs.push(Sequence::Differences(seq));
-                } else if let Ok(seq) = Binom::try_from(tmp.as_slice()) {
+                } else if let Ok(seq) = Binomial::try_from(tmp.as_slice()) {
                     seqs.push(Sequence::Binom(seq));
                 } else {
                     seqs.clear();

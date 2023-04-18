@@ -1,11 +1,12 @@
 use crate::Term;
 
-use super::{binom::Binom, differences::Differences, zipped::Zipped};
+use super::{binom::Binomial, differences::Differences, fibonacci::Fibonacci, zipped::Zipped};
 
 #[derive(Debug, PartialEq)]
 pub enum Sequence {
     Differences(Differences),
-    Binom(Binom),
+    Binom(Binomial),
+    Fibonacci(Fibonacci),
     Zipped(Zipped),
 }
 
@@ -17,6 +18,7 @@ impl IntoIterator for Sequence {
         match self {
             Self::Differences(seq) => Box::new(seq.into_iter()),
             Self::Binom(seq) => Box::new(seq.into_iter()),
+            Self::Fibonacci(seq) => Box::new(seq.into_iter()),
             Self::Zipped(seq) => Box::new(seq.into_iter()),
         }
     }
@@ -28,8 +30,10 @@ impl TryFrom<&[Term]> for Sequence {
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         if let Ok(seq) = Differences::try_from(value) {
             return Ok(Self::Differences(seq));
-        } else if let Ok(seq) = Binom::try_from(value) {
+        } else if let Ok(seq) = Binomial::try_from(value) {
             return Ok(Self::Binom(seq));
+        } else if let Ok(seq) = Fibonacci::try_from(value) {
+            return Ok(Self::Fibonacci(seq));
         } else if let Ok(seq) = Zipped::try_from(value) {
             return Ok(Self::Zipped(seq));
         }
@@ -39,6 +43,8 @@ impl TryFrom<&[Term]> for Sequence {
 
 #[cfg(test)]
 mod tests {
+    use fraction::Zero;
+
     use super::Sequence;
     use super::Term;
     use super::*;
@@ -58,7 +64,7 @@ mod tests {
             // binomial
             (
                 frac![3, 8, 23, 68, 203],
-                Sequence::Binom(Binom {
+                Sequence::Binom(Binomial {
                     start: Term::from(3),
                     a: Term::from(3),
                     b: Term::from(-1),
@@ -66,7 +72,7 @@ mod tests {
             ),
             (
                 frac![18, 108, 648, 3888],
-                Sequence::Binom(Binom {
+                Sequence::Binom(Binomial {
                     start: Term::from(18),
                     a: Term::from(6),
                     b: Term::from(0),
@@ -74,7 +80,7 @@ mod tests {
             ),
             (
                 frac![68, 36, 20, 12, 8],
-                Sequence::Binom(Binom {
+                Sequence::Binom(Binomial {
                     start: Term::from(68),
                     a: Term::new(1, 2),
                     b: Term::from(2),
@@ -82,7 +88,7 @@ mod tests {
             ),
             (
                 frac![8, 20, 50, 125],
-                Sequence::Binom(Binom {
+                Sequence::Binom(Binomial {
                     start: Term::from(8),
                     a: Term::new(5, 2),
                     b: Term::from(0),
@@ -90,7 +96,7 @@ mod tests {
             ),
             (
                 frac![4, -8, 16, -32],
-                Sequence::Binom(Binom {
+                Sequence::Binom(Binomial {
                     start: Term::from(4),
                     a: Term::from(-2),
                     b: Term::from(0),
@@ -101,12 +107,12 @@ mod tests {
                 frac![2, 5, 6, 20, 18, 80, 54, 320, 162, 1280, 486],
                 Sequence::Zipped(Zipped {
                     seqs: vec![
-                        Sequence::Binom(Binom {
+                        Sequence::Binom(Binomial {
                             start: Term::from(2),
                             a: Term::from(3),
                             b: Term::from(0),
                         }),
-                        Sequence::Binom(Binom {
+                        Sequence::Binom(Binomial {
                             start: Term::from(5),
                             a: Term::from(4),
                             b: Term::from(0),
@@ -161,6 +167,39 @@ mod tests {
                             terms: frac![15, -2],
                         }),
                     ],
+                }),
+            ),
+            // fibonacci
+            (
+                // a(n) = a(n-2) - a(n-1)
+                frac![1, 0, 1, -1, 2, -3],
+                Sequence::Fibonacci(Fibonacci {
+                    s0: Term::from(1),
+                    s1: Term::from(0),
+                    a: Term::from(1),
+                    b: Term::from(-1),
+                    c: Term::zero(),
+                }),
+            ),
+            (
+                // a(n) = a(n-2) + a(n-1)
+                frac![34, -21, 13, -8, 5, -3],
+                Sequence::Fibonacci(Fibonacci {
+                    s0: Term::from(34),
+                    s1: Term::from(-21),
+                    a: Term::from(1),
+                    b: Term::from(1),
+                    c: Term::zero(),
+                }),
+            ),
+            (
+                frac![13, -21, 34, -55, 89, -144],
+                Sequence::Fibonacci(Fibonacci {
+                    s0: Term::from(13),
+                    s1: Term::from(-21),
+                    a: Term::from(1),
+                    b: Term::from(-1),
+                    c: Term::zero(),
                 }),
             ),
         ];
