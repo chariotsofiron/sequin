@@ -31,7 +31,7 @@ impl TryFrom<&[Term]> for Zipped {
                 if let Ok(seq) = Differences::try_from(tmp.as_slice()) {
                     seqs.push(Sequence::Differences(seq));
                 } else if let Ok(seq) = Binomial::try_from(tmp.as_slice()) {
-                    seqs.push(Sequence::Binom(seq));
+                    seqs.push(Sequence::Binomial(seq));
                 } else {
                     seqs.clear();
                     break;

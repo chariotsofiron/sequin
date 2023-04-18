@@ -9,11 +9,19 @@ use crate::sequence::{
 };
 use crate::Term;
 
+use self::alternator::Alternator;
+
 #[derive(Debug, PartialEq)]
 pub enum Sequence {
+    /// Linear differences
     Differences(Differences),
-    Binom(Binomial),
+    /// Binomial recursive
+    Binomial(Binomial),
+    /// Fibonacci
     Fibonacci(Fibonacci),
+    /// Alternator
+    Alternator(Alternator),
+    // Meta strategies
     Zipped(Zipped),
 }
 
@@ -24,8 +32,9 @@ impl IntoIterator for Sequence {
     fn into_iter(self) -> Self::IntoIter {
         match self {
             Self::Differences(seq) => Box::new(seq.into_iter()),
-            Self::Binom(seq) => Box::new(seq.into_iter()),
+            Self::Binomial(seq) => Box::new(seq.into_iter()),
             Self::Fibonacci(seq) => Box::new(seq.into_iter()),
+            Self::Alternator(seq) => Box::new(seq.into_iter()),
             Self::Zipped(seq) => Box::new(seq.into_iter()),
         }
     }
@@ -38,9 +47,11 @@ impl TryFrom<&[Term]> for Sequence {
         if let Ok(seq) = Differences::try_from(value) {
             return Ok(Self::Differences(seq));
         } else if let Ok(seq) = Binomial::try_from(value) {
-            return Ok(Self::Binom(seq));
+            return Ok(Self::Binomial(seq));
         } else if let Ok(seq) = Fibonacci::try_from(value) {
             return Ok(Self::Fibonacci(seq));
+        } else if let Ok(seq) = Alternator::try_from(value) {
+            return Ok(Self::Alternator(seq));
         } else if let Ok(seq) = Zipped::try_from(value) {
             return Ok(Self::Zipped(seq));
         }
@@ -71,7 +82,7 @@ mod tests {
             // binomial
             (
                 frac![3, 8, 23, 68, 203],
-                Sequence::Binom(Binomial {
+                Sequence::Binomial(Binomial {
                     start: Term::from(3),
                     a: Term::from(3),
                     b: Term::from(-1),
@@ -79,7 +90,7 @@ mod tests {
             ),
             (
                 frac![18, 108, 648, 3888],
-                Sequence::Binom(Binomial {
+                Sequence::Binomial(Binomial {
                     start: Term::from(18),
                     a: Term::from(6),
                     b: Term::from(0),
@@ -87,7 +98,7 @@ mod tests {
             ),
             (
                 frac![68, 36, 20, 12, 8],
-                Sequence::Binom(Binomial {
+                Sequence::Binomial(Binomial {
                     start: Term::from(68),
                     a: Term::new(1, 2),
                     b: Term::from(2),
@@ -95,7 +106,7 @@ mod tests {
             ),
             (
                 frac![8, 20, 50, 125],
-                Sequence::Binom(Binomial {
+                Sequence::Binomial(Binomial {
                     start: Term::from(8),
                     a: Term::new(5, 2),
                     b: Term::from(0),
@@ -103,7 +114,7 @@ mod tests {
             ),
             (
                 frac![4, -8, 16, -32],
-                Sequence::Binom(Binomial {
+                Sequence::Binomial(Binomial {
                     start: Term::from(4),
                     a: Term::from(-2),
                     b: Term::from(0),
@@ -114,12 +125,12 @@ mod tests {
                 frac![2, 5, 6, 20, 18, 80, 54, 320, 162, 1280, 486],
                 Sequence::Zipped(Zipped {
                     seqs: vec![
-                        Sequence::Binom(Binomial {
+                        Sequence::Binomial(Binomial {
                             start: Term::from(2),
                             a: Term::from(3),
                             b: Term::from(0),
                         }),
-                        Sequence::Binom(Binomial {
+                        Sequence::Binomial(Binomial {
                             start: Term::from(5),
                             a: Term::from(4),
                             b: Term::from(0),
@@ -207,6 +218,43 @@ mod tests {
                     a: Term::from(1),
                     b: Term::from(-1),
                     c: Term::zero(),
+                }),
+            ),
+            // Alternator
+            (
+                frac![18, 6, 24, 8, 32],
+                Sequence::Alternator(Alternator {
+                    start: Term::from(18),
+                    a: Term::new(1, 3),
+                    b: Term::from(0),
+                    c: Term::from(4),
+                    d: Term::from(0),
+                }),
+            ),
+            (
+                frac![3, 12, 24, 33, 66],
+                Sequence::Alternator(Alternator {
+                    start: Term::from(3),
+                    a: Term::from(1),
+                    b: Term::from(9),
+                    c: Term::from(2),
+                    d: Term::from(0),
+                }),
+            ),
+            (
+                vec![
+                    Term::from(230),
+                    Term::from(460),
+                    Term::from(46),
+                    Term::from(92),
+                    Term::new(92, 10),
+                ],
+                Sequence::Alternator(Alternator {
+                    start: Term::from(230),
+                    a: Term::from(2),
+                    b: Term::from(0),
+                    c: Term::new(1, 10),
+                    d: Term::from(0),
                 }),
             ),
         ];

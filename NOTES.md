@@ -28,6 +28,9 @@ curly braces mean they can be zipped
 `w * G(n+x) ^ y`
 where g is a function mapping to identity, a previous term, or a special sequence
 
+OEIS
+- https://oeis.org/search?q=1,2,3,6,11,23,47,106,235&fmt=json
+
 ## Sequence examples
 
 - https://www.fibonicci.com/numerical-reasoning/number-sequences-test/hard/

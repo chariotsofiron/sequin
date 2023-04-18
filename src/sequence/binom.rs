@@ -39,22 +39,15 @@ impl TryFrom<&[Term]> for Binomial {
 
         const NUMERATOR_RANGE: std::ops::Range<i32> = 0..10;
         const DENOMINATOR_RANGE: std::ops::Range<i32> = 1..10;
-        let fractions = iproduct!(
-            NUMERATOR_RANGE,
-            DENOMINATOR_RANGE,
-            [false, true]
-                .into_iter()
-                .cycle()
-                .take(NUMERATOR_RANGE.len())
-        )
-        .into_iter()
-        .map(|(a, b, is_signed)| {
-            if is_signed {
-                Term::new_neg(a, b)
-            } else {
-                Term::new(a, b)
-            }
-        });
+        let fractions = iproduct!(DENOMINATOR_RANGE, NUMERATOR_RANGE, [false, true])
+            .into_iter()
+            .map(|(b, a, is_signed)| {
+                if is_signed {
+                    Term::new_neg(a, b)
+                } else {
+                    Term::new(a, b)
+                }
+            });
 
         for a in fractions {
             let b = value[1] - a * value[0];
