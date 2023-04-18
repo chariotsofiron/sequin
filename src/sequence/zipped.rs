@@ -1,6 +1,5 @@
+use super::{binom::Binomial, differences::Differences, Sequence};
 use crate::Term;
-
-use super::{binom::Binomial, differences::Differences, sequence::Sequence};
 
 #[derive(Debug, PartialEq)]
 pub struct Zipped {
