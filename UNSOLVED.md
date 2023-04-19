@@ -1,10 +1,3 @@
-## 52 56 48 64 32
-
-first differences: +4, -8, +16, -32
-a(n) = -2A(n-1)
-
-
-
 # Cultural
 
 ## 3 5 7 11 13
@@ -72,3 +65,23 @@ one one, two ones, one two one one, one one two two one one, etc.
 ## 1 2 2 4 8 32
 
 a(n) = a(n-1) * a(n-2)
+
+
+
+## 89, 76, 65, 52
+
+## 17, 32, 61, 118
+
+a(n) = 2a(n-1) - n - 1
+a(0) = 17
+a(1) = 2*17 - 2 = 32
+
+
+
+## 87, 165, 726, 1353
+
+a(n) = a(n-1) + reverse(a(n-1))
+
+## 15, 47, 31, 54, 73
+
+15473 repeated

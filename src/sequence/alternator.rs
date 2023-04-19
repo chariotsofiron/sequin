@@ -42,7 +42,7 @@ impl TryFrom<&[Term]> for Alternator {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
-        if value.len() < 5 {
+        if value.len() < 4 {
             return Err(());
         }
 

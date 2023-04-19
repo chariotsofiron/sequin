@@ -35,7 +35,7 @@ impl TryFrom<&[Term]> for Oeis {
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         // convert sequence to integers, error if not integers
-        let numbers: Vec<i32> = value
+        let numbers: Vec<i64> = value
             .into_iter()
             .map(|&x| {
                 if x.denom() == Some(&1) {
@@ -44,7 +44,7 @@ impl TryFrom<&[Term]> for Oeis {
                     Err(())
                 }
             })
-            .collect::<Result<Vec<i32>, _>>()?;
+            .collect::<Result<Vec<i64>, _>>()?;
 
         // query oeis.org
         let nums: String = numbers.iter().map(|x| format!("{},", x)).collect();
@@ -59,7 +59,9 @@ impl TryFrom<&[Term]> for Oeis {
             let nums: Vec<Term> = results[0]
                 .data
                 .split(',')
-                .map(|x| Term::from(x.parse::<i64>().unwrap()))
+                .map(|x| x.parse::<i64>())
+                .take_while(|x| x.is_ok())
+                .map(|f| Term::from(f.unwrap()))
                 .collect();
 
             // match subsequence
