@@ -20,8 +20,8 @@ impl std::fmt::Display for Alternator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Alternator({}, {}, {}, {})",
-            self.a, self.b, self.c, self.d
+            "Alternator({}, {}, {}, {}, {})",
+            self.start, self.a, self.b, self.c, self.d
         )
     }
 }
@@ -110,5 +110,26 @@ impl TryFrom<&[Term]> for Alternator {
             }
         }
         Err(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test1() {
+        let seq = [2, 5, 1, 6, 0];
+        let seq = seq.iter().map(|&x| Term::from(x)).collect::<Vec<_>>();
+        let seq = Alternator::try_from(seq.as_slice()).unwrap();
+        assert_eq!(
+            seq,
+            Alternator {
+                start: Term::from(2),
+                a: Term::from(-1),
+                b: Term::from(7),
+                c: Term::from(-1),
+                d: Term::from(6),
+            }
+        );
     }
 }
