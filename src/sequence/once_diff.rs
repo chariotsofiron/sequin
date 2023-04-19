@@ -71,7 +71,7 @@ mod tests {
     use super::*;
     #[test]
     fn test() {
-        // let nums = [2, 0, 1, 3, 4, 2, 3, 5, 6, 4, 5, 7, 8, 6];
+        // let nums = [31, 23, 15, 27, 20, 13, 23, 17, 11, 19, 14, 9];
         // let nums = nums.into_iter().map(|n| Term::from(n)).collect::<Vec<_>>();
         // let diff = OnceDiff::try_from(nums.as_slice()).unwrap();
         // println!("{}", diff);

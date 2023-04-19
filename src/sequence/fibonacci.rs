@@ -1,5 +1,3 @@
-use itertools::iproduct;
-
 use crate::Term;
 
 /// Sequences where the next term can be expressed as

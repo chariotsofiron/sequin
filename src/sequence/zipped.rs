@@ -1,4 +1,4 @@
-use super::{binom::Binomial, differences::Differences, Sequence};
+use super::{binom::Binomial, once_diff::OnceDiff, Sequence};
 use crate::Term;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -45,10 +45,10 @@ impl TryFrom<&[Term]> for Zipped {
                     .step_by(i)
                     .copied()
                     .collect::<Vec<Term>>();
-                if let Ok(seq) = Differences::try_from(tmp.as_slice()) {
-                    seqs.push(Sequence::Differences(seq));
-                } else if let Ok(seq) = Binomial::try_from(tmp.as_slice()) {
+                if let Ok(seq) = Binomial::try_from(tmp.as_slice()) {
                     seqs.push(Sequence::Binomial(seq));
+                } else if let Ok(seq) = OnceDiff::try_from(tmp.as_slice()) {
+                    seqs.push(Sequence::OnceDiff(seq));
                 } else {
                     seqs.clear();
                     break;
@@ -99,35 +99,36 @@ impl Iterator for Multizip {
     }
 }
 
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-//     #[test]
-//     fn test_zipped() {
-//         let nums = [2, 5, 6, 20, 18, 80, 54, 320, 162, 1280, 486];
-//         let nums = nums.iter().map(|x| Fraction::from(*x)).collect::<Vec<_>>();
-//         let zipped = Zipped::try_from(nums.as_slice()).unwrap();
-//         let ans = zipped.into_iter().take(nums.len()).collect::<Vec<_>>();
-//         assert_eq!(ans, nums);
-//     }
+    // #[test]
+    // fn test_zipped() {
+    //     let nums = [2, 5, 6, 20, 18, 80, 54, 320, 162, 1280, 486];
+    //     let nums = nums.iter().map(|x| Fraction::from(*x)).collect::<Vec<_>>();
+    //     let zipped = Zipped::try_from(nums.as_slice()).unwrap();
+    //     let ans = zipped.into_iter().take(nums.len()).collect::<Vec<_>>();
+    //     assert_eq!(ans, nums);
+    // }
 
-//     #[test]
-//     fn test2() {
-//         let nums = vec![10, 45, 15, 38, 20, 31];
-//         let nums = nums
-//             .iter()
-//             .map(|x| Fraction::from(*x))
-//             .collect::<Vec<Fraction>>();
-//         let binom = Zipped::try_from(nums.as_slice()).unwrap();
-//         let result: Vec<_> = binom.into_iter().take(nums.len()).collect();
-//         assert_eq!(result, nums);
-//     }
+    // #[test]
+    // fn test2() {
+    //     let nums = vec![10, 45, 15, 38, 20, 31];
+    //     let nums = nums
+    //         .iter()
+    //         .map(|x| Fraction::from(*x))
+    //         .collect::<Vec<Fraction>>();
+    //     let binom = Zipped::try_from(nums.as_slice()).unwrap();
+    //     let result: Vec<_> = binom.into_iter().take(nums.len()).collect();
+    //     assert_eq!(result, nums);
+    // }
 
-//     #[test]
-//     fn test3() {
-//         let nums = [2, 0, 1, 3, 4, 2, 3, 5, 6, 4, 5, 7, 8, 6];
-//         let nums = nums.iter().map(|x| Fraction::from(*x)).collect::<Vec<_>>();
-//         let zipped = Zipped::try_from(nums.as_slice()).unwrap();
-//     }
-// }
+    #[test]
+    fn test3() {
+        let nums = [31, 23, 15, 27, 20, 13, 23, 17, 11, 19, 14, 9];
+        let nums = nums.iter().map(|x| Term::from(*x)).collect::<Vec<_>>();
+        let zipped = Zipped::try_from(nums.as_slice()).unwrap();
+        println!("{}", zipped);
+    }
+}
