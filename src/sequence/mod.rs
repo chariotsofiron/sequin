@@ -263,13 +263,13 @@ mod tests {
                     d: Term::from(0),
                 }),
             ),
-            // // oeis
-            // (
-            //     frac![1, 4, 7, 8, 9, 6],
-            //     Sequence::Oeis(Oeis {
-            //         numbers: frac![1, 4, 7, 8, 9, 6, 3, 2, 5],
-            //     }),
-            // ),
+            // oeis
+            (
+                frac![1, 4, 7, 8, 9, 6],
+                Sequence::Oeis(Oeis {
+                    numbers: frac![1, 4, 7, 8, 9, 6, 3, 2, 5],
+                }),
+            ),
         ];
 
         for (input, expected) in test_cases.into_iter() {

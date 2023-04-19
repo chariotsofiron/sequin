@@ -55,8 +55,6 @@ impl TryFrom<&[Term]> for Oeis {
             .into_json()
             .map_err(|_| ())?;
 
-        println!("{:?}", response);
-
         if let Some(results) = response.results {
             let nums: Vec<Term> = results[0]
                 .data
@@ -64,12 +62,12 @@ impl TryFrom<&[Term]> for Oeis {
                 .map(|x| Term::from(x.parse::<i32>().unwrap()))
                 .collect();
 
-            println!("{:?}", nums);
-
             // match subsequence
-            for w in nums.windows(numbers.len()) {
+            for (i, w) in nums.windows(numbers.len()).enumerate() {
                 if w == value {
-                    return Ok(Self { numbers: nums });
+                    return Ok(Self {
+                        numbers: nums[i..].to_vec(),
+                    });
                 }
             }
         }

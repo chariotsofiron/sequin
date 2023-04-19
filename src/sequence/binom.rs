@@ -1,6 +1,6 @@
-use itertools::iproduct;
-
 use crate::Term;
+use fraction::Zero;
+use itertools::iproduct;
 
 /// Sequences where the next term is ax+b where x
 /// is the previous term and a and b are constants.
@@ -51,10 +51,9 @@ impl TryFrom<&[Term]> for Binomial {
 
         for a in fractions {
             let b = value[1] - a * value[0];
-            // if b.denom() != Some(&1) || b.denom() != Some(&0) {
-            //     println!("b = {}, a={}", b, a);
-            //     continue;
-            // }
+            if b.fract() != Term::zero() {
+                continue; // b should be an integer
+            }
             let mut ok = true;
             for w in value.windows(2) {
                 if a * w[0] + b != w[1] {

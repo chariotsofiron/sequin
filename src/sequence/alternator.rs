@@ -67,6 +67,9 @@ impl TryFrom<&[Term]> for Alternator {
         for w in fractions.clone() {
             a = w;
             b = value[1] - a * value[0];
+            if b.fract() != Term::zero() {
+                continue; // b should be an integer
+            }
             ok = true;
             for i in (0..value.len()).step_by(2) {
                 if i + 1 < value.len() && value[i + 1] != a * value[i] + b {
@@ -86,6 +89,9 @@ impl TryFrom<&[Term]> for Alternator {
         for y in fractions.clone() {
             c = y;
             d = value[2] - c * value[1];
+            if d.fract() != Term::zero() {
+                continue; // b should be an integer
+            }
             ok = true;
             for i in (1..value.len()).step_by(2) {
                 if i + 1 < value.len() && value[i + 1] != c * value[i] + d {
