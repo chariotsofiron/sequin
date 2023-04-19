@@ -16,9 +16,27 @@
 
 3 interleaved linear sequences
 
-## 10 45 15 38 20 31
+## 10, 45, 15, 38, 20, 31
 
 2 interleaved linear sequences (+5, -7)
+
+## 1, 10, 37, 82, 145, 226
+
+2nd differences converge
+a(n) = a(n-1) + (2n-1)*9
+82 = a(3) = a(2) + 5*9
+prev + odds * 9
+
+## -2, 1, 6, 13, 22, 33
+
+2nd differences converge
+a(n) = a(n-1) + (2n+1)
+prev + odds
+
+## 1, 8, 27, 64, 125, 216
+
+3rd differences converge
+The cubes: 1^3, 2^3, 3^3, 4^3, 5^3, 6^3
 
 
 # Binomial
@@ -50,7 +68,7 @@ A(n) = 5/2 * A(n-1)
 
 A(n) = A(n-2) + A(n-1)
 
-## 1 0 1 -1 2 -3
+## 1, 0, 1, -1, 2, -3
 
 A(n) = A(n-2) - A(n-1)
 
@@ -72,3 +90,21 @@ A(n) = A(n-2) - A(n-1)
 ## 230 460 46 92 9.2
 
 *2, /10, *2, /10
+
+
+# Cultural
+
+## 3, 4, 6, 8, 12, 14
+
+primes + 1
+
+## 1 11 21 1211 111221
+
+one one, two ones, one two one one, one one two two one one, etc.
+## 1 2 2 4 8 32
+
+a(n) = a(n-1) * a(n-2)
+
+## 3 5 7 11 13
+
+The primes: a(n) = prime(n+1)

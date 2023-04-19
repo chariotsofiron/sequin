@@ -52,10 +52,10 @@ impl TryFrom<&[Term]> for Sequence {
             return Ok(Self::Differences(seq));
         } else if let Ok(seq) = Binomial::try_from(value) {
             return Ok(Self::Binomial(seq));
-        } else if let Ok(seq) = Fibonacci::try_from(value) {
-            return Ok(Self::Fibonacci(seq));
         } else if let Ok(seq) = Alternator::try_from(value) {
             return Ok(Self::Alternator(seq));
+        } else if let Ok(seq) = Fibonacci::try_from(value) {
+            return Ok(Self::Fibonacci(seq));
         } else if let Ok(seq) = Zipped::try_from(value) {
             return Ok(Self::Zipped(seq));
         } else if let Ok(seq) = Oeis::try_from(value) {
