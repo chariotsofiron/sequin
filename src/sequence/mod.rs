@@ -2,6 +2,7 @@ pub mod alternator;
 pub mod binom;
 pub mod differences;
 pub mod fibonacci;
+pub mod oeis;
 pub mod zipped;
 
 use crate::sequence::{
@@ -10,8 +11,9 @@ use crate::sequence::{
 use crate::Term;
 
 use self::alternator::Alternator;
+use self::oeis::Oeis;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Sequence {
     /// Linear differences
     Differences(Differences),
@@ -23,6 +25,7 @@ pub enum Sequence {
     Alternator(Alternator),
     // Meta strategies
     Zipped(Zipped),
+    Oeis(Oeis),
 }
 
 impl IntoIterator for Sequence {
@@ -36,6 +39,7 @@ impl IntoIterator for Sequence {
             Self::Fibonacci(seq) => Box::new(seq.into_iter()),
             Self::Alternator(seq) => Box::new(seq.into_iter()),
             Self::Zipped(seq) => Box::new(seq.into_iter()),
+            Self::Oeis(seq) => Box::new(seq.into_iter()),
         }
     }
 }
@@ -54,6 +58,8 @@ impl TryFrom<&[Term]> for Sequence {
             return Ok(Self::Alternator(seq));
         } else if let Ok(seq) = Zipped::try_from(value) {
             return Ok(Self::Zipped(seq));
+        } else if let Ok(seq) = Oeis::try_from(value) {
+            return Ok(Self::Oeis(seq));
         }
         Err(())
     }
@@ -257,6 +263,13 @@ mod tests {
                     d: Term::from(0),
                 }),
             ),
+            // // oeis
+            // (
+            //     frac![1, 4, 7, 8, 9, 6],
+            //     Sequence::Oeis(Oeis {
+            //         numbers: frac![1, 4, 7, 8, 9, 6, 3, 2, 5],
+            //     }),
+            // ),
         ];
 
         for (input, expected) in test_cases.into_iter() {

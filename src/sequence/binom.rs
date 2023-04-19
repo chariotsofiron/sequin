@@ -5,7 +5,7 @@ use crate::Term;
 /// Sequences where the next term is ax+b where x
 /// is the previous term and a and b are constants.
 /// Covers the linear sequence case.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Binomial {
     pub start: Term,
     pub a: Term,
@@ -51,6 +51,10 @@ impl TryFrom<&[Term]> for Binomial {
 
         for a in fractions {
             let b = value[1] - a * value[0];
+            // if b.denom() != Some(&1) || b.denom() != Some(&0) {
+            //     println!("b = {}, a={}", b, a);
+            //     continue;
+            // }
             let mut ok = true;
             for w in value.windows(2) {
                 if a * w[0] + b != w[1] {

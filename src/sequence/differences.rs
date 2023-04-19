@@ -1,6 +1,6 @@
 use crate::Term;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Differences {
     pub terms: Vec<Term>,
 }

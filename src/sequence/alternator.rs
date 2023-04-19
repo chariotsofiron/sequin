@@ -7,7 +7,7 @@ use crate::Term;
 /// Sequence produced by alternating an operation
 /// a(n) = a * x(n-1) + b if n odd
 /// a(n) = c * x(n-1) + d if n even
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Alternator {
     pub start: Term,
     pub a: Term,

@@ -4,7 +4,7 @@ use crate::Term;
 
 /// Sequences where the next term can be expressed as
 /// a(n) = a*A(n-2) + b*A(n-1) + c
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Fibonacci {
     pub s0: Term,
     pub s1: Term,

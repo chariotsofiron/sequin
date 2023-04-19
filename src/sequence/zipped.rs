@@ -1,7 +1,7 @@
 use super::{binom::Binomial, differences::Differences, Sequence};
 use crate::Term;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Zipped {
     pub seqs: Vec<Sequence>,
 }
