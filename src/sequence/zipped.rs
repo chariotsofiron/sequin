@@ -6,6 +6,23 @@ pub struct Zipped {
     pub seqs: Vec<Sequence>,
 }
 
+impl std::fmt::Display for Zipped {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let mut display = String::new();
+        display.push('[');
+        display.push_str(
+            &self
+                .seqs
+                .iter()
+                .map(|s| s.to_string())
+                .collect::<Vec<String>>()
+                .join(", "),
+        );
+        display.push(']');
+        write!(f, "Zipped({display})")
+    }
+}
+
 impl IntoIterator for Zipped {
     type Item = Term;
     type IntoIter = Multizip;

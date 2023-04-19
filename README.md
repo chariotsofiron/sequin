@@ -6,6 +6,8 @@ It tries to find the simplest rule that fits the observed sequence.
 
 ## Strategy
 
+Sequence should have at least 4 terms
+
 1. Linear differences
 2. Binomial recursive: a(n) = c * a(n-1) + d
 3. Fibonacci: a(n) = c * a(n-1) + d * a(n-2)

@@ -19,6 +19,18 @@ pub struct Oeis {
     pub numbers: Vec<Term>,
 }
 
+impl std::fmt::Display for Oeis {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let nums: String = self
+            .numbers
+            .iter()
+            .map(|t| t.to_string())
+            .collect::<Vec<String>>()
+            .join(", ");
+        write!(f, "Oeis({})", nums)
+    }
+}
+
 impl Iterator for Oeis {
     type Item = Term;
 

@@ -5,6 +5,18 @@ pub struct Differences {
     pub terms: Vec<Term>,
 }
 
+impl std::fmt::Display for Differences {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let terms = self
+            .terms
+            .iter()
+            .map(|t| t.to_string())
+            .collect::<Vec<String>>()
+            .join(", ");
+        write!(f, "Differences({})", terms)
+    }
+}
+
 impl Iterator for Differences {
     type Item = Term;
 

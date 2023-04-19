@@ -3,6 +3,7 @@ pub mod binom;
 pub mod differences;
 pub mod fibonacci;
 pub mod oeis;
+pub mod once_diff;
 pub mod zipped;
 
 use crate::sequence::{
@@ -12,6 +13,7 @@ use crate::Term;
 
 use self::alternator::Alternator;
 use self::oeis::Oeis;
+use self::once_diff::OnceDiff;
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Sequence {
@@ -19,13 +21,29 @@ pub enum Sequence {
     Differences(Differences),
     /// Binomial recursive
     Binomial(Binomial),
-    /// Fibonacci
-    Fibonacci(Fibonacci),
     /// Alternator
     Alternator(Alternator),
+    /// Fibonacci
+    Fibonacci(Fibonacci),
     // Meta strategies
     Zipped(Zipped),
+    /// Once diff
+    OnceDiff(OnceDiff),
     Oeis(Oeis),
+}
+
+impl std::fmt::Display for Sequence {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Differences(seq) => write!(f, "{}", seq),
+            Self::Binomial(seq) => write!(f, "{}", seq),
+            Self::Alternator(seq) => write!(f, "{}", seq),
+            Self::Fibonacci(seq) => write!(f, "{}", seq),
+            Self::Zipped(seq) => write!(f, "{}", seq),
+            Self::OnceDiff(seq) => write!(f, "{}", seq),
+            Self::Oeis(seq) => write!(f, "{}", seq),
+        }
+    }
 }
 
 impl IntoIterator for Sequence {
@@ -36,9 +54,10 @@ impl IntoIterator for Sequence {
         match self {
             Self::Differences(seq) => Box::new(seq.into_iter()),
             Self::Binomial(seq) => Box::new(seq.into_iter()),
-            Self::Fibonacci(seq) => Box::new(seq.into_iter()),
             Self::Alternator(seq) => Box::new(seq.into_iter()),
+            Self::Fibonacci(seq) => Box::new(seq.into_iter()),
             Self::Zipped(seq) => Box::new(seq.into_iter()),
+            Self::OnceDiff(seq) => Box::new(seq.into_iter()),
             Self::Oeis(seq) => Box::new(seq.into_iter()),
         }
     }

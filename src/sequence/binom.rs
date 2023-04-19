@@ -14,11 +14,7 @@ pub struct Binomial {
 
 impl std::fmt::Display for Binomial {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "a(0) = {}\na(n) = {}*A(n-1) + {}",
-            self.start, self.a, self.b
-        )
+        write!(f, "Binom({}, {}, {})", self.start, self.a, self.b)
     }
 }
 
@@ -33,7 +29,8 @@ impl TryFrom<&[Term]> for Binomial {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
-        if value.len() < 3 {
+        if value.len() < 4 {
+            // too many false positives if only 3 terms
             return Err(());
         }
 
@@ -80,5 +77,17 @@ impl Iterator for Binomial {
         let ans = self.start;
         self.start = self.a * self.start + self.b;
         Some(ans)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test() {
+        let nums = [104, 152, 200, 248, 296];
+        let nums = nums.into_iter().map(|n| Term::from(n)).collect::<Vec<_>>();
+        let binom = Binomial::try_from(nums.as_slice()).unwrap();
+        println!("{:?}", binom);
     }
 }

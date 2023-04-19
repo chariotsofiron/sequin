@@ -20,7 +20,7 @@ impl std::fmt::Display for Alternator {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "a(n) = {} * x(n-1) + {} | {} * x(n-1) + {}",
+            "Alternator({}, {}, {}, {})",
             self.a, self.b, self.c, self.d
         )
     }
