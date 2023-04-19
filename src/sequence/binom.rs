@@ -29,14 +29,13 @@ impl TryFrom<&[Term]> for Binomial {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
-        if value.len() < 4 {
-            // too many false positives if only 3 terms
+        if value.len() < 3 || value[0] == Term::zero() && value.len() < 4 {
             return Err(());
         }
 
-        const NUMERATOR_RANGE: std::ops::Range<i32> = 0..11;
-        const DENOMINATOR_RANGE: std::ops::Range<i32> = 1..11;
-        let fractions = iproduct!(DENOMINATOR_RANGE, NUMERATOR_RANGE, [false, true])
+        let num_rage: std::ops::Range<i32> = 0..11;
+        let denom_range: std::ops::Range<i32> = 1..11;
+        let fractions = iproduct!(denom_range, num_rage, [false, true])
             .into_iter()
             .map(|(b, a, is_signed)| {
                 if is_signed {

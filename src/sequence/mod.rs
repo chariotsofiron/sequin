@@ -303,9 +303,9 @@ mod tests {
             ),
             // oeis
             (
-                frac![1, 4, 7, 8, 9, 6],
+                frac![0, 1, 4, 7, 8, 9, 6],
                 Sequence::Oeis(Oeis {
-                    numbers: frac![1, 4, 7, 8, 9, 6, 3, 2, 5],
+                    numbers: frac![0, 1, 4, 7, 8, 9, 6, 3, 2, 5],
                 }),
             ),
         ];
