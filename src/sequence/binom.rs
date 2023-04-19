@@ -37,8 +37,8 @@ impl TryFrom<&[Term]> for Binomial {
             return Err(());
         }
 
-        const NUMERATOR_RANGE: std::ops::Range<i32> = 0..10;
-        const DENOMINATOR_RANGE: std::ops::Range<i32> = 1..10;
+        const NUMERATOR_RANGE: std::ops::Range<i32> = 0..11;
+        const DENOMINATOR_RANGE: std::ops::Range<i32> = 1..11;
         let fractions = iproduct!(DENOMINATOR_RANGE, NUMERATOR_RANGE, [false, true])
             .into_iter()
             .map(|(b, a, is_signed)| {

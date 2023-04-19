@@ -59,7 +59,7 @@ impl TryFrom<&[Term]> for Oeis {
             let nums: Vec<Term> = results[0]
                 .data
                 .split(',')
-                .map(|x| Term::from(x.parse::<i32>().unwrap()))
+                .map(|x| Term::from(x.parse::<i64>().unwrap()))
                 .collect();
 
             // match subsequence

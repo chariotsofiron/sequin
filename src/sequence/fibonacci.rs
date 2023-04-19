@@ -39,7 +39,7 @@ impl TryFrom<&[Term]> for Fibonacci {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
-        if value.len() < 3 {
+        if value.len() < 5 {
             return Err(());
         }
         for a in (-1..=1).into_iter().map(|x| Term::from(x)) {
