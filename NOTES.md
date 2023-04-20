@@ -15,6 +15,23 @@ Solver using differences
 Take first differences and find patterns
 Take first ratios and find patterns
 
+
+
+# Solved by oeis
+
+## 3, 4, 6, 8, 12, 14
+
+primes + 1
+
+## 1 11 21 1211 111221
+
+one one, two ones, one two one one, one one two two one one, etc.
+
+## 3 5 7 11 13
+
+The primes: a(n) = prime(n+1)
+
+
 # Unsolved
 
 ## 15, 29, 56, 108, 208
