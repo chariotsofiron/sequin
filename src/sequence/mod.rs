@@ -240,7 +240,6 @@ mod tests {
                     s1: Term::from(0),
                     a: Term::from(1),
                     b: Term::from(-1),
-                    c: Term::zero(),
                 }),
             ),
             (
@@ -251,7 +250,6 @@ mod tests {
                     s1: Term::from(-21),
                     a: Term::from(1),
                     b: Term::from(1),
-                    c: Term::zero(),
                 }),
             ),
             (
@@ -261,7 +259,6 @@ mod tests {
                     s1: Term::from(-21),
                     a: Term::from(1),
                     b: Term::from(-1),
-                    c: Term::zero(),
                 }),
             ),
             // Alternator

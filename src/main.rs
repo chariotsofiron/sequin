@@ -4,7 +4,7 @@ use sequence::Sequence;
 pub type Term = GenericFraction<i64>;
 
 fn main() {
-    let nums = [2, 5, 1, 6, 0];
+    let nums = [13, -21, 34, -55, 89, -144];
     let seq = nums.iter().map(|&x| Term::from(x)).collect::<Vec<_>>();
     let seq = Sequence::try_from(seq.as_slice()).unwrap();
     println!("{}", seq);

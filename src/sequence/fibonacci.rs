@@ -8,15 +8,15 @@ pub struct Fibonacci {
     pub s1: Term,
     pub a: Term,
     pub b: Term,
-    pub c: Term,
 }
 
 impl std::fmt::Display for Fibonacci {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "a(0) = {}\na(1) = {}\na(n) = {}*A(n-2) + {}*A(n-1) + {}",
-            self.s0, self.s1, self.a, self.b, self.c
+            // "a(0) = {}\na(1) = {}\na(n) = {}*A(n-2) + {}*A(n-1) + {}",
+            "Fib({}, {}, {}, {})",
+            self.s0, self.s1, self.a, self.b
         )
     }
 }
@@ -25,7 +25,7 @@ impl Iterator for Fibonacci {
     type Item = Term;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let next = self.a * self.s0 + self.b * self.s1 + self.c;
+        let next = self.a * self.s0 + self.b * self.s1;
         let tmp = self.s0;
         self.s0 = self.s1;
         self.s1 = next;
@@ -42,10 +42,9 @@ impl TryFrom<&[Term]> for Fibonacci {
         }
         for a in (-1..=1).into_iter().map(|x| Term::from(x)) {
             for b in (-1..=1).into_iter().map(|x| Term::from(x)) {
-                let c = value[2] - a * value[0] - b * value[1];
                 let mut ok = true;
                 for w in value.windows(3) {
-                    if a * w[0] + b * w[1] + c != w[2] {
+                    if a * w[0] + b * w[1] != w[2] {
                         ok = false;
                         break;
                     }
@@ -56,7 +55,6 @@ impl TryFrom<&[Term]> for Fibonacci {
                         s1: Term::from(value[1]),
                         a,
                         b,
-                        c,
                     });
                 }
             }
