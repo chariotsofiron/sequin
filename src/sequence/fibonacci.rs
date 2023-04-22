@@ -40,8 +40,8 @@ impl TryFrom<&[Term]> for Fibonacci {
         if value.len() < 4 {
             return Err(());
         }
-        for a in (-1..=1).into_iter().map(|x| Term::from(x)) {
-            for b in (-1..=1).into_iter().map(|x| Term::from(x)) {
+        for a in (-2..=2).into_iter().map(|x| Term::from(x)) {
+            for b in (-2..=2).into_iter().map(|x| Term::from(x)) {
                 let mut ok = true;
                 for w in value.windows(3) {
                     if a * w[0] + b * w[1] != w[2] {
@@ -61,4 +61,18 @@ impl TryFrom<&[Term]> for Fibonacci {
         }
         Err(())
     }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // #[test]
+    // fn test() {
+    //     let nums = [18, 6, 24, 8, 32];
+    //     let nums = nums.into_iter().map(|n| Term::from(n)).collect::<Vec<_>>();
+    //     let seq = Fibonacci::try_from(nums.as_slice()).unwrap();
+    //     println!("{}", seq);
+    // }
 }
