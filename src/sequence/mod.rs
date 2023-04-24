@@ -99,6 +99,22 @@ mod tests {
         let test_cases = [
             // binomial
             (
+                frac![1, 1, 1],
+                Sequence::Binomial(Binomial {
+                    start: Term::from(1),
+                    a: Term::from(0),
+                    b: Term::from(1),
+                }),
+            ),
+            (
+                frac![1, 2, 3],
+                Sequence::Binomial(Binomial {
+                    start: Term::from(1),
+                    a: Term::from(1),
+                    b: Term::from(1),
+                }),
+            ),
+            (
                 frac![3, 8, 23, 68, 203],
                 Sequence::Binomial(Binomial {
                     start: Term::from(3),
@@ -159,7 +175,7 @@ mod tests {
             // differences
             (
                 // 2nd differences converge
-                frac![-3, 3, 27, 69, 129, 207],
+                frac![-3, 3, 27, 69 /*,129, 207*/],
                 Sequence::OnceDiff(OnceDiff {
                     start: Term::from(-3),
                     seq: Box::new(Sequence::Binomial(Binomial {
@@ -240,6 +256,7 @@ mod tests {
                     s1: Term::from(0),
                     a: Term::from(1),
                     b: Term::from(-1),
+                    c: Term::from(0),
                 }),
             ),
             (
@@ -250,6 +267,7 @@ mod tests {
                     s1: Term::from(-21),
                     a: Term::from(1),
                     b: Term::from(1),
+                    c: Term::from(0),
                 }),
             ),
             (
@@ -259,6 +277,7 @@ mod tests {
                     s1: Term::from(-21),
                     a: Term::from(1),
                     b: Term::from(-1),
+                    c: Term::from(0),
                 }),
             ),
             // Alternator

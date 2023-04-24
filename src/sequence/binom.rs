@@ -1,6 +1,5 @@
 use crate::Term;
 use fraction::Zero;
-use itertools::iproduct;
 
 /// Sequences where the next term is ax+b where x
 /// is the previous term and a and b are constants.
@@ -33,39 +32,44 @@ impl TryFrom<&[Term]> for Binomial {
             return Err(());
         }
 
-        let num_rage: std::ops::Range<i32> = 0..11;
-        let denom_range: std::ops::Range<i32> = 1..11;
-        let fractions = iproduct!(denom_range, num_rage, [false, true])
-            .into_iter()
-            .map(|(b, a, is_signed)| {
-                if is_signed {
-                    Term::new_neg(a, b)
-                } else {
-                    Term::new(a, b)
-                }
-            });
+        // x, y, z
+        // a * x + b = y
+        // a * y + b = z
+        // a * (x - y) = y - z
+        // a = (y - z) / (x - y)
 
-        for a in fractions {
+        let seq = if value[0] == value[1] && value[1] == value[2] {
+            Binomial {
+                start: value[0],
+                a: Term::zero(),
+                b: value[0],
+            }
+        } else if value[0] == value[1] {
+            Err(())?
+        } else {
+            let a = (value[1] - value[2]) / (value[0] - value[1]);
             let b = value[1] - a * value[0];
-            if b.fract() != Term::zero() {
-                continue; // b should be an integer
+            if b.denom() != Some(&1) {
+                Err(())?
             }
-            let mut ok = true;
-            for w in value.windows(2) {
-                if a * w[0] + b != w[1] {
-                    ok = false;
-                    break;
-                }
+            Binomial {
+                start: value[0],
+                a,
+                b,
             }
-            if ok {
-                return Ok(Binomial {
-                    start: Term::from(value[0]),
-                    a,
-                    b,
-                });
-            }
+        };
+
+        if seq
+            .clone()
+            .into_iter()
+            .zip(value.iter())
+            .skip(2)
+            .all(|(a, b)| a == *b)
+        {
+            Ok(seq)
+        } else {
+            Err(())
         }
-        Err(())
     }
 }
 
@@ -87,6 +91,6 @@ mod tests {
         let nums = [104, 152, 200, 248, 296];
         let nums = nums.into_iter().map(|n| Term::from(n)).collect::<Vec<_>>();
         let binom = Binomial::try_from(nums.as_slice()).unwrap();
-        println!("{:?}", binom);
+        println!("{}", binom);
     }
 }

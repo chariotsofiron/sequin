@@ -72,6 +72,7 @@ mod tests {
     #[test]
     fn test() {
         let nums = [1, 4, 7, 8, 9, 6];
+        let nums = [-3, 3, 27, 69, 129, 207];
         let nums = nums.into_iter().map(|n| Term::from(n)).collect::<Vec<_>>();
         let diff = OnceDiff::try_from(nums.as_slice()).unwrap();
         println!("{}", diff);
