@@ -79,11 +79,13 @@ impl TryFrom<&[Term]> for Sequence {
 
 #[cfg(test)]
 mod tests {
-    use fraction::Zero;
-
     use super::Sequence;
     use super::Term;
-    use super::*;
+    use super::alternator::Alternator;
+    use super::binom::Binomial;
+    use super::fibonacci::Fibonacci;
+    use super::oeis::Oeis;
+    use super::once_diff::OnceDiff;
     use crate::sequence::zipped::Zipped;
 
     macro_rules! frac {

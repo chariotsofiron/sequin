@@ -11,3 +11,4 @@ itertools = "0.10.5"
 ureq = { version = "2.2.0", features = ["json"] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
+clap = { version = "4.3.19", features = ["derive"] }

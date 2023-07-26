@@ -17,12 +17,12 @@ impl std::fmt::Display for Binomial {
     }
 }
 
-impl Binomial {
-    pub fn closed_form(&self) -> String {
-        // https://math.stackexchange.com/a/2194232
-        format!("a(n) = {}*{}^n + {}*{}^n", self.a, self.a, self.b, self.b)
-    }
-}
+// impl Binomial {
+//     fn closed_form(&self) -> String {
+//         // https://math.stackexchange.com/a/2194232
+//         format!("a(n) = {}*{}^n + {}*{}^n", self.a, self.a, self.b, self.b)
+//     }
+// }
 
 impl TryFrom<&[Term]> for Binomial {
     type Error = ();
