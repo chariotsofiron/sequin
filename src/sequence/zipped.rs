@@ -129,6 +129,6 @@ mod tests {
         let nums = [31, 23, 15, 27, 20, 13, 23, 17, 11, 19, 14, 9];
         let nums = nums.iter().map(|x| Term::from(*x)).collect::<Vec<_>>();
         let zipped = Zipped::try_from(nums.as_slice()).unwrap();
-        println!("{}", zipped);
+        println!("{zipped}");
     }
 }

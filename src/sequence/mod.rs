@@ -3,6 +3,7 @@ pub mod binom;
 pub mod fibonacci;
 pub mod oeis;
 pub mod once_diff;
+pub mod once_factor;
 pub mod zipped;
 
 use crate::sequence::{binom::Binomial, fibonacci::Fibonacci, zipped::Zipped};
@@ -11,11 +12,13 @@ use crate::Term;
 use self::alternator::Alternator;
 use self::oeis::Oeis;
 use self::once_diff::OnceDiff;
+use self::once_factor::OnceFactor;
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Sequence {
     /// Binomial recursive
     Binomial(Binomial),
+    OnceFactor(OnceFactor),
     /// Alternator
     Alternator(Alternator),
     /// Fibonacci
@@ -31,6 +34,7 @@ impl std::fmt::Display for Sequence {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Binomial(seq) => write!(f, "{seq}"),
+            Self::OnceFactor(seq) => write!(f, "{seq}"),
             Self::Alternator(seq) => write!(f, "{seq}"),
             Self::Fibonacci(seq) => write!(f, "{seq}"),
             Self::Zipped(seq) => write!(f, "{seq}"),
@@ -47,6 +51,7 @@ impl IntoIterator for Sequence {
     fn into_iter(self) -> Self::IntoIter {
         match self {
             Self::Binomial(seq) => Box::new(seq.into_iter()),
+            Self::OnceFactor(seq) => Box::new(seq.into_iter()),
             Self::Alternator(seq) => Box::new(seq.into_iter()),
             Self::Fibonacci(seq) => Box::new(seq.into_iter()),
             Self::Zipped(seq) => Box::new(seq.into_iter()),
@@ -62,6 +67,8 @@ impl TryFrom<&[Term]> for Sequence {
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         if let Ok(seq) = Binomial::try_from(value) {
             return Ok(Self::Binomial(seq));
+        } else if let Ok(seq) = OnceFactor::try_from(value) {
+            return Ok(Self::OnceFactor(seq));
         } else if let Ok(seq) = Alternator::try_from(value) {
             return Ok(Self::Alternator(seq));
         } else if let Ok(seq) = Fibonacci::try_from(value) {
@@ -157,7 +164,7 @@ mod tests {
             ),
         ];
 
-        for (input, expected) in test_cases.into_iter() {
+        for (input, expected) in test_cases {
             let seq = Sequence::try_from(input.as_slice()).unwrap();
             assert_eq!(seq, Sequence::Binomial(expected));
             assert_eq!(seq.into_iter().take(input.len()).collect::<Vec<_>>(), input);
@@ -339,7 +346,7 @@ mod tests {
             ),
         ];
 
-        for (input, expected) in test_cases.into_iter() {
+        for (input, expected) in test_cases {
             let seq = Sequence::try_from(input.as_slice()).unwrap();
             assert_eq!(seq, expected);
             assert_eq!(seq.into_iter().take(input.len()).collect::<Vec<_>>(), input);

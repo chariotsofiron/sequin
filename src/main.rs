@@ -1,7 +1,6 @@
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
-// hello world
-
 mod sequence;
+
 use fraction::GenericFraction;
 use sequence::Sequence;
 use std::str::FromStr;
@@ -19,7 +18,7 @@ struct Args {
 
     /// Start at the beggining of the sequence
     #[arg(short, long, default_value = "false")]
-    pub describe: bool,
+    pub info: bool,
 
     /// Start at the beggining of the sequence
     #[arg(short, long, default_value = "false")]
@@ -36,15 +35,15 @@ fn main() -> Result<(), String> {
     let terms = args
         .terms
         .iter()
-        .flat_map(|x| x.split([',', ' ']))
+        .flat_map(|x| x.trim_end_matches(',').split([',', ' ']))
         .map(Term::from_str)
         .collect::<Result<Vec<_>, _>>()
-        .map_err(|e| e.to_string())?;
+        .map_err(|_| format!("Failed to parse sequence: {:?}", args.terms))?;
 
     let seq =
         Sequence::try_from(terms.as_slice()).map_err(|_err| "Couldn't find pattern".to_owned())?;
 
-    if args.describe {
+    if args.info {
         println!("{seq}");
     }
 

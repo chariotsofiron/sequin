@@ -14,12 +14,12 @@ impl std::fmt::Display for OnceDiff {
     }
 }
 
-pub struct OnceDiffIterator {
+pub struct SeqIterator {
     start: Term,
     seq: Box<dyn Iterator<Item = Term>>,
 }
 
-impl Iterator for OnceDiffIterator {
+impl Iterator for SeqIterator {
     type Item = Term;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -31,10 +31,10 @@ impl Iterator for OnceDiffIterator {
 
 impl IntoIterator for OnceDiff {
     type Item = Term;
-    type IntoIter = OnceDiffIterator;
+    type IntoIter = SeqIterator;
 
     fn into_iter(self) -> Self::IntoIter {
-        OnceDiffIterator {
+        SeqIterator {
             start: self.start,
             seq: self.seq.into_iter(),
         }
@@ -48,8 +48,9 @@ impl TryFrom<&[Term]> for OnceDiff {
         if value.len() < 4 {
             return Err(());
         }
-
         let diffs: Vec<Term> = value.windows(2).map(|w| w[1] - w[0]).collect();
+
+        #[allow(clippy::option_if_let_else)]
         if let Ok(seq) = Binomial::try_from(diffs.as_slice()) {
             Ok(Self {
                 start: value[0],
@@ -71,10 +72,10 @@ mod tests {
     use super::*;
     #[test]
     fn test() {
-        let nums = [1, 4, 7, 8, 9, 6];
+        let _nums = [1, 4, 7, 8, 9, 6];
         let nums = [-3, 3, 27, 69, 129, 207];
-        let nums = nums.into_iter().map(|n| Term::from(n)).collect::<Vec<_>>();
+        let nums = nums.into_iter().map(Term::from).collect::<Vec<_>>();
         let diff = OnceDiff::try_from(nums.as_slice()).unwrap();
-        println!("{}", diff);
+        println!("{diff}");
     }
 }

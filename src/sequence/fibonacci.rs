@@ -97,14 +97,14 @@ mod tests {
 
     #[test]
     fn test() {
-        let nums = [13, -21, 34, -55, 89, -144];
+        let _nums = [13, -21, 34, -55, 89, -144];
         // let nums = [34, -21, 13, -8, 5, -3];
-        let nums = [1, 3, 7, 17, 41, 99, 239];
-        let nums = [18, 6, 24, 8, 32];
-        let nums = [54, 18, 72, 24, 96, 32];
+        let _nums = [1, 3, 7, 17, 41, 99, 239];
+        let _nums = [18, 6, 24, 8, 32];
+        let _nums = [54, 18, 72, 24, 96, 32];
         let nums = [-3, 3, 27, 69, 129, 207];
-        let nums = nums.into_iter().map(|n| Term::from(n)).collect::<Vec<_>>();
+        let nums = nums.into_iter().map(Term::from).collect::<Vec<_>>();
         let seq = Fibonacci::try_from(nums.as_slice()).unwrap();
-        println!("{}", seq);
+        println!("{seq}");
     }
 }
