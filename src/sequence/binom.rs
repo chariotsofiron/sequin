@@ -4,7 +4,7 @@ use fraction::Zero;
 /// Sequences where the next term is ax+b where x
 /// is the previous term and a and b are constants.
 /// Covers the linear sequence case.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Binomial {
     pub start: Term,
     pub a: Term,
@@ -39,7 +39,7 @@ impl TryFrom<&[Term]> for Binomial {
         // a = (y - z) / (x - y)
 
         let seq = if value[0] == value[1] && value[1] == value[2] {
-            Binomial {
+            Self {
                 start: value[0],
                 a: Term::zero(),
                 b: value[0],
@@ -50,22 +50,16 @@ impl TryFrom<&[Term]> for Binomial {
             let a = (value[1] - value[2]) / (value[0] - value[1]);
             let b = value[1] - a * value[0];
             if b.denom() != Some(&1) {
-                Err(())?
+                Err(())?;
             }
-            Binomial {
+            Self {
                 start: value[0],
                 a,
                 b,
             }
         };
 
-        if seq
-            .clone()
-            .into_iter()
-            .zip(value.iter())
-            .skip(2)
-            .all(|(a, b)| a == *b)
-        {
+        if seq.clone().zip(value.iter()).skip(2).all(|(a, b)| a == *b) {
             Ok(seq)
         } else {
             Err(())

@@ -1,3 +1,6 @@
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+// hello world
+
 mod sequence;
 use fraction::GenericFraction;
 use sequence::Sequence;
@@ -16,9 +19,13 @@ struct Args {
 
     /// Start at the beggining of the sequence
     #[arg(short, long, default_value = "false")]
-    pub beggining: bool,
+    pub describe: bool,
 
-    /// Terms of the sequence
+    /// Start at the beggining of the sequence
+    #[arg(short, long, default_value = "false")]
+    pub beginning: bool,
+
+    /// Terms of the sequence, comma or space separated
     #[clap(value_parser, num_args = 1.., value_delimiter = ' ')]
     pub terms: Vec<String>,
 }
@@ -29,16 +36,21 @@ fn main() -> Result<(), String> {
     let terms = args
         .terms
         .iter()
-        .map(|x| Term::from_str(x.trim_matches([',', ' '].as_slice())))
+        .flat_map(|x| x.split([',', ' ']))
+        .map(Term::from_str)
         .collect::<Result<Vec<_>, _>>()
         .map_err(|e| e.to_string())?;
 
     let seq =
         Sequence::try_from(terms.as_slice()).map_err(|_err| "Couldn't find pattern".to_owned())?;
 
+    if args.describe {
+        println!("{seq}");
+    }
+
     seq.into_iter()
-        .skip(if args.beggining { 0 } else { terms.len() })
-        .take(args.n as usize)
+        .skip(if args.beginning { 0 } else { terms.len() })
+        .take(usize::from(args.n))
         .for_each(|x| println!("{x}"));
 
     Ok(())

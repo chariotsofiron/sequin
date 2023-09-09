@@ -14,7 +14,7 @@ impl std::fmt::Display for Zipped {
             &self
                 .seqs
                 .iter()
-                .map(|s| s.to_string())
+                .map(ToString::to_string)
                 .collect::<Vec<String>>()
                 .join(", "),
         );
@@ -28,7 +28,7 @@ impl IntoIterator for Zipped {
     type IntoIter = Multizip;
 
     fn into_iter(self) -> Self::IntoIter {
-        Multizip::new(self.seqs.into_iter().map(|x| x.into_iter()).collect())
+        Multizip::new(self.seqs.into_iter().map(IntoIterator::into_iter).collect())
     }
 }
 

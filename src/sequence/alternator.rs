@@ -7,7 +7,7 @@ use crate::Term;
 /// Sequence produced by alternating an operation
 /// a(n) = a * x(n-1) + b if n odd
 /// a(n) = c * x(n-1) + d if n even
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Alternator {
     pub start: Term,
     pub a: Term,
@@ -42,22 +42,22 @@ impl TryFrom<&[Term]> for Alternator {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
-        if value.len() < 4 {
-            return Err(());
-        }
-
         // 0, 1, 2, ..., 1/2, 2/2, 3/2, ..., 1/3, 2/3, 3/3, ...
         const NUMERATOR_RANGE: std::ops::Range<i32> = 1..10;
         const DENOMINATOR_RANGE: std::ops::Range<i32> = 1..12;
-        let fractions = iproduct!(DENOMINATOR_RANGE, NUMERATOR_RANGE, [false, true])
-            .into_iter()
-            .map(|(b, a, is_signed)| {
+
+        if value.len() < 4 {
+            return Err(());
+        }
+        let fractions = iproduct!(DENOMINATOR_RANGE, NUMERATOR_RANGE, [false, true]).map(
+            |(b, a, is_signed)| {
                 if is_signed {
                     Term::new_neg(a, b)
                 } else {
                     Term::new(a, b)
                 }
-            });
+            },
+        );
         let mut a = Term::zero();
         let mut b = Term::zero();
         let mut c;
@@ -100,7 +100,7 @@ impl TryFrom<&[Term]> for Alternator {
                 }
             }
             if ok {
-                return Ok(Alternator {
+                return Ok(Self {
                     start: value[0],
                     a,
                     b,

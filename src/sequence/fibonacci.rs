@@ -2,7 +2,7 @@ use crate::Term;
 
 /// Sequences where the next term can be expressed as
 /// a(n) = a*A(n-2) + b*A(n-1) + c
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Fibonacci {
     pub s0: Term,
     pub s1: Term,
@@ -59,35 +59,31 @@ impl TryFrom<&[Term]> for Fibonacci {
         // y [(d-c)(b-a) - (c-b)^2] = (e-d)(b-a) - (d-c)(c-b)
         // y = [(e-d)(b-a) - (d-c)(c-b)] / [(d-c)(b-a) - (c-b)^2]
 
-        let a = value[0];
-        let b = value[1];
-        let c = value[2];
-        let d = value[3];
-        let e = value[4];
+        let s0 = value[0];
+        let s1 = value[1];
+        let s2 = value[2];
+        let s3 = value[3];
+        let s4 = value[4];
 
-        let y = ((e - d) * (b - a) - (d - c) * (c - b)) / ((d - c) * (b - a) - (c - b) * (c - b));
+        let y = ((s4 - s3) * (s1 - s0) - (s3 - s2) * (s2 - s1))
+            / ((s3 - s2) * (s1 - s0) - (s2 - s1) * (s2 - s1));
 
-        let x = ((d - c)
-            - (c - b) * ((e - d) * (b - a) - (d - c) * (c - b))
-                / ((d - c) * (b - a) - (c - b) * (c - b)))
-            / (b - a);
+        let x = ((s3 - s2)
+            - (s2 - s1) * ((s4 - s3) * (s1 - s0) - (s3 - s2) * (s2 - s1))
+                / ((s3 - s2) * (s1 - s0) - (s2 - s1) * (s2 - s1)))
+            / (s1 - s0);
 
-        let z = c - x * a - y * b;
+        let z = s2 - x * s0 - y * s1;
 
-        let seq = Fibonacci {
-            s0: Term::from(a),
-            s1: Term::from(b),
+        let seq = Self {
+            s0,
+            s1,
             a: x,
             b: y,
             c: z,
         };
 
-        if seq
-            .clone()
-            .into_iter()
-            .zip(value.iter())
-            .all(|(a, b)| a == *b)
-        {
+        if seq.clone().zip(value.iter()).all(|(a, b)| a == *b) {
             Ok(seq)
         } else {
             Err(())

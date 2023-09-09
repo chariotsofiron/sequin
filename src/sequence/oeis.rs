@@ -2,19 +2,19 @@ use serde::{Deserialize, Serialize};
 
 use crate::Term;
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Root {
     pub results: Option<Vec<Response>>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Response {
     pub number: u64,
     pub data: String,
     pub name: String,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Oeis {
     pub numbers: Vec<Term>,
 }
@@ -24,10 +24,10 @@ impl std::fmt::Display for Oeis {
         let nums: String = self
             .numbers
             .iter()
-            .map(|t| t.to_string())
+            .map(ToString::to_string)
             .collect::<Vec<String>>()
             .join(", ");
-        write!(f, "Oeis({})", nums)
+        write!(f, "Oeis({nums})")
     }
 }
 
@@ -48,7 +48,7 @@ impl TryFrom<&[Term]> for Oeis {
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         // convert sequence to integers, error if not integers
         let numbers: Vec<i64> = value
-            .into_iter()
+            .iter()
             .map(|&x| {
                 if x.denom() == Some(&1) {
                     Ok(*x.numer().unwrap())
@@ -59,7 +59,7 @@ impl TryFrom<&[Term]> for Oeis {
             .collect::<Result<Vec<i64>, _>>()?;
 
         // query oeis.org
-        let nums: String = numbers.iter().map(|x| format!("{},", x)).collect();
+        let nums: String = numbers.iter().map(|x| format!("{x},")).collect();
         let url = format!("https://oeis.org/search?q={nums}&fmt=json");
         let response: Root = ureq::get(&url)
             .call()
@@ -71,8 +71,8 @@ impl TryFrom<&[Term]> for Oeis {
             let nums: Vec<Term> = results[0]
                 .data
                 .split(',')
-                .map(|x| x.parse::<i64>())
-                .take_while(|x| x.is_ok())
+                .map(str::parse::<i64>)
+                .take_while(Result::is_ok)
                 .map(|f| Term::from(f.unwrap()))
                 .collect();
 

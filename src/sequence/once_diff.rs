@@ -51,12 +51,12 @@ impl TryFrom<&[Term]> for OnceDiff {
 
         let diffs: Vec<Term> = value.windows(2).map(|w| w[1] - w[0]).collect();
         if let Ok(seq) = Binomial::try_from(diffs.as_slice()) {
-            Ok(OnceDiff {
+            Ok(Self {
                 start: value[0],
                 seq: Box::new(Sequence::Binomial(seq)),
             })
         } else if let Ok(seq) = Self::try_from(diffs.as_slice()) {
-            Ok(OnceDiff {
+            Ok(Self {
                 start: value[0],
                 seq: Box::new(Sequence::OnceDiff(seq)),
             })

@@ -30,12 +30,12 @@ pub enum Sequence {
 impl std::fmt::Display for Sequence {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Binomial(seq) => write!(f, "{}", seq),
-            Self::Alternator(seq) => write!(f, "{}", seq),
-            Self::Fibonacci(seq) => write!(f, "{}", seq),
-            Self::Zipped(seq) => write!(f, "{}", seq),
-            Self::OnceDiff(seq) => write!(f, "{}", seq),
-            Self::Oeis(seq) => write!(f, "{}", seq),
+            Self::Binomial(seq) => write!(f, "{seq}"),
+            Self::Alternator(seq) => write!(f, "{seq}"),
+            Self::Fibonacci(seq) => write!(f, "{seq}"),
+            Self::Zipped(seq) => write!(f, "{seq}"),
+            Self::OnceDiff(seq) => write!(f, "{seq}"),
+            Self::Oeis(seq) => write!(f, "{seq}"),
         }
     }
 }
@@ -97,65 +97,76 @@ mod tests {
     }
 
     #[test]
-    fn test_seqs() {
+    fn test_binomial() {
         let test_cases = [
-            // binomial
             (
                 frac![1, 1, 1],
-                Sequence::Binomial(Binomial {
+                Binomial {
                     start: Term::from(1),
                     a: Term::from(0),
                     b: Term::from(1),
-                }),
+                },
             ),
             (
                 frac![1, 2, 3],
-                Sequence::Binomial(Binomial {
+                Binomial {
                     start: Term::from(1),
                     a: Term::from(1),
                     b: Term::from(1),
-                }),
+                },
             ),
             (
                 frac![3, 8, 23, 68, 203],
-                Sequence::Binomial(Binomial {
+                Binomial {
                     start: Term::from(3),
                     a: Term::from(3),
                     b: Term::from(-1),
-                }),
+                },
             ),
             (
                 frac![18, 108, 648, 3888],
-                Sequence::Binomial(Binomial {
+                Binomial {
                     start: Term::from(18),
                     a: Term::from(6),
                     b: Term::from(0),
-                }),
+                },
             ),
             (
                 frac![68, 36, 20, 12, 8],
-                Sequence::Binomial(Binomial {
+                Binomial {
                     start: Term::from(68),
                     a: Term::new(1, 2),
                     b: Term::from(2),
-                }),
+                },
             ),
             (
                 frac![8, 20, 50, 125],
-                Sequence::Binomial(Binomial {
+                Binomial {
                     start: Term::from(8),
                     a: Term::new(5, 2),
                     b: Term::from(0),
-                }),
+                },
             ),
             (
                 frac![4, -8, 16, -32],
-                Sequence::Binomial(Binomial {
+                Binomial {
                     start: Term::from(4),
                     a: Term::from(-2),
                     b: Term::from(0),
-                }),
+                },
             ),
+        ];
+
+        for (input, expected) in test_cases.into_iter() {
+            let seq = Sequence::try_from(input.as_slice()).unwrap();
+            assert_eq!(seq, Sequence::Binomial(expected));
+            assert_eq!(seq.into_iter().take(input.len()).collect::<Vec<_>>(), input);
+        }
+    }
+
+    #[test]
+    fn test_seqs() {
+        let test_cases = [
             (
                 // zipped binomial
                 frac![2, 5, 6, 20, 18, 80, 54, 320, 162, 1280, 486],
@@ -334,29 +345,4 @@ mod tests {
             assert_eq!(seq.into_iter().take(input.len()).collect::<Vec<_>>(), input);
         }
     }
-
-    // #[test]
-    // fn test_one() {
-    //     let test_cases = [(
-    //         frac![31, 23, 15, 27, 20, 13, 23, 17, 11, 19, 14, 9],
-    //         Sequence::Zipped(Zipped {
-    //             seqs: vec![
-    //                 Sequence::Differences(Differences {
-    //                     terms: frac![31, -4],
-    //                 }),
-    //                 Sequence::Differences(Differences {
-    //                     terms: frac![23, -3],
-    //                 }),
-    //                 Sequence::Differences(Differences {
-    //                     terms: frac![15, -2],
-    //                 }),
-    //             ],
-    //         }),
-    //     )];
-    //     for (input, expected) in test_cases.into_iter() {
-    //         let seq = Sequence::try_from(input.as_slice()).unwrap();
-    //         assert_eq!(seq, expected);
-    //         assert_eq!(seq.into_iter().take(input.len()).collect::<Vec<_>>(), input);
-    //     }
-    // }
 }
