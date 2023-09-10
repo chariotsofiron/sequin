@@ -76,15 +76,3 @@ impl Iterator for Binomial {
         Some(ans)
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test() {
-        let nums = [104, 152, 200, 248, 296];
-        let nums = nums.into_iter().map(Term::from).collect::<Vec<_>>();
-        let binom = Binomial::try_from(nums.as_slice()).unwrap();
-        println!("{binom}");
-    }
-}

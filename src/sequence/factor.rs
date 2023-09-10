@@ -5,18 +5,18 @@ use crate::Term;
 use super::{binom::Binomial, Sequence};
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct OnceFactor {
+pub struct Factor {
     pub start: Term,
     pub seq: Box<Sequence>,
 }
 
-impl std::fmt::Display for OnceFactor {
+impl std::fmt::Display for Factor {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "Factor({}, {})", self.start, self.seq)
     }
 }
 
-impl TryFrom<&[Term]> for OnceFactor {
+impl TryFrom<&[Term]> for Factor {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
@@ -56,7 +56,7 @@ impl Iterator for SeqIterator {
     }
 }
 
-impl IntoIterator for OnceFactor {
+impl IntoIterator for Factor {
     type Item = Term;
     type IntoIter = SeqIterator;
 

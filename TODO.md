@@ -1,2 +1,5 @@
 - [ ] implement double-ended iterator
-- [ ] only go one level deep for zipped and oncediff
+- [ ] improve OEIS
+- [ ] Letter sequences
+  - C, F, I, L, O, R
+  - J, F, M, A, M, J, J, A, S, O, N, D

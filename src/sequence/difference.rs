@@ -3,12 +3,12 @@ use crate::Term;
 use super::{binom::Binomial, Sequence};
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct OnceDiff {
+pub struct Difference {
     pub start: Term,
     pub seq: Box<Sequence>,
 }
 
-impl std::fmt::Display for OnceDiff {
+impl std::fmt::Display for Difference {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "Diff({}, {})", self.start, self.seq)
     }
@@ -29,7 +29,7 @@ impl Iterator for SeqIterator {
     }
 }
 
-impl IntoIterator for OnceDiff {
+impl IntoIterator for Difference {
     type Item = Term;
     type IntoIter = SeqIterator;
 
@@ -41,7 +41,7 @@ impl IntoIterator for OnceDiff {
     }
 }
 
-impl TryFrom<&[Term]> for OnceDiff {
+impl TryFrom<&[Term]> for Difference {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
@@ -59,23 +59,10 @@ impl TryFrom<&[Term]> for OnceDiff {
         } else if let Ok(seq) = Self::try_from(diffs.as_slice()) {
             Ok(Self {
                 start: value[0],
-                seq: Box::new(Sequence::OnceDiff(seq)),
+                seq: Box::new(Sequence::Difference(seq)),
             })
         } else {
             Err(())
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test() {
-        let _nums = [1, 4, 7, 8, 9, 6];
-        let nums = [-3, 3, 27, 69, 129, 207];
-        let nums = nums.into_iter().map(Term::from).collect::<Vec<_>>();
-        let diff = OnceDiff::try_from(nums.as_slice()).unwrap();
-        println!("{diff}");
     }
 }

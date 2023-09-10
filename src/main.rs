@@ -4,7 +4,7 @@ mod sequence;
 use fraction::GenericFraction;
 use sequence::Sequence;
 use std::str::FromStr;
-pub type Term = GenericFraction<i64>;
+pub type Term = GenericFraction<i128>;
 
 use clap::Parser;
 
