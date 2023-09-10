@@ -1,0 +1,2 @@
+- [ ] implement double-ended iterator
+- [ ] only go one level deep for zipped and oncediff
