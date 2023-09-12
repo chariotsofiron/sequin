@@ -1,4 +1,4 @@
-- [ ] implement double-ended iterator
+- [ ] implement double-ended iterator for sequences
 - [ ] improve OEIS
 - [ ] Letter sequences
   - C, F, I, L, O, R
