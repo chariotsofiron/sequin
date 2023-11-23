@@ -3,7 +3,13 @@ use crate::Term;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Zipped {
-    pub seqs: Vec<Sequence>,
+    seqs: Vec<Sequence>,
+}
+
+impl Zipped {
+    pub fn new(seqs: Vec<Sequence>) -> Self {
+        Self { seqs }
+    }
 }
 
 impl std::fmt::Display for Zipped {

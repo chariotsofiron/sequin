@@ -4,8 +4,20 @@ use super::{binom::Binomial, Sequence};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Difference {
-    pub start: Term,
-    pub seq: Box<Sequence>,
+    start: Term,
+    seq: Box<Sequence>,
+}
+
+impl Difference {
+    pub fn new<A>(start: A, seq: Sequence) -> Self
+    where
+        A: Into<Term>,
+    {
+        Self {
+            start: start.into(),
+            seq: Box::new(seq),
+        }
+    }
 }
 
 impl std::fmt::Display for Difference {
@@ -52,15 +64,9 @@ impl TryFrom<&[Term]> for Difference {
 
         #[allow(clippy::option_if_let_else)]
         if let Ok(seq) = Binomial::try_from(diffs.as_slice()) {
-            Ok(Self {
-                start: value[0],
-                seq: Box::new(Sequence::Binomial(seq)),
-            })
+            Ok(Self::new(value[0], Sequence::Binomial(seq)))
         } else if let Ok(seq) = Self::try_from(diffs.as_slice()) {
-            Ok(Self {
-                start: value[0],
-                seq: Box::new(Sequence::Difference(seq)),
-            })
+            Ok(Self::new(value[0], Sequence::Difference(seq)))
         } else {
             Err(())
         }

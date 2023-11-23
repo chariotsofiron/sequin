@@ -1,13 +1,30 @@
 use crate::Term;
 
 /// Sequences where the next term can be expressed as
-/// a(n) = a*A(n-2) + b*A(n-1) + c
+/// a(n) = a*A(n-2) + b*A(n-1)
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Fibonacci {
-    pub s0: Term,
-    pub s1: Term,
-    pub a: Term,
-    pub b: Term,
+    s0: Term,
+    s1: Term,
+    a: Term,
+    b: Term,
+}
+
+impl Fibonacci {
+    pub fn new<A, B, C, D>(s0: A, s1: B, a: C, b: D) -> Self
+    where
+        A: Into<Term>,
+        B: Into<Term>,
+        C: Into<Term>,
+        D: Into<Term>,
+    {
+        Self {
+            s0: s0.into(),
+            s1: s1.into(),
+            a: a.into(),
+            b: b.into(),
+        }
+    }
 }
 
 impl std::fmt::Display for Fibonacci {
@@ -59,7 +76,7 @@ impl TryFrom<&[Term]> for Fibonacci {
         let x = (s2 * s2 - s1 * s3) / (s0 * s2 - s1 * s1);
         let y = (s1 * s2 - s0 * s3) / (s1 * s1 - s0 * s2);
 
-        let seq = Self { s0, s1, a: x, b: y };
+        let seq = Self::new(s0, s1, x, y);
 
         if seq.clone().zip(value.iter()).all(|(a, b)| a == *b) {
             Ok(seq)

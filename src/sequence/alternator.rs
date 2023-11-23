@@ -9,11 +9,30 @@ use crate::Term;
 /// a(n) = c * x(n-1) + d if n even
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Alternator {
-    pub start: Term,
-    pub a: Term,
-    pub b: Term,
-    pub c: Term,
-    pub d: Term,
+    start: Term,
+    a: Term,
+    b: Term,
+    c: Term,
+    d: Term,
+}
+
+impl Alternator {
+    pub fn new<A, B, C, D, E>(start: A, a: B, b: C, c: D, d: E) -> Self
+    where
+        A: Into<Term>,
+        B: Into<Term>,
+        C: Into<Term>,
+        D: Into<Term>,
+        E: Into<Term>,
+    {
+        Self {
+            start: start.into(),
+            a: a.into(),
+            b: b.into(),
+            c: c.into(),
+            d: d.into(),
+        }
+    }
 }
 
 impl std::fmt::Display for Alternator {
@@ -100,13 +119,7 @@ impl TryFrom<&[Term]> for Alternator {
                 }
             }
             if ok {
-                return Ok(Self {
-                    start: value[0],
-                    a,
-                    b,
-                    c,
-                    d,
-                });
+                return Ok(Self::new(value[0], a, b, c, d));
             }
         }
         Err(())

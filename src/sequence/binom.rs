@@ -6,9 +6,24 @@ use fraction::Zero;
 /// Covers the linear sequence case.
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Binomial {
-    pub start: Term,
-    pub a: Term,
-    pub b: Term,
+    start: Term,
+    a: Term,
+    b: Term,
+}
+
+impl Binomial {
+    pub fn new<X, Y, Z>(start: X, a: Y, b: Z) -> Self
+    where
+        X: Into<Term>,
+        Y: Into<Term>,
+        Z: Into<Term>,
+    {
+        Self {
+            start: start.into(),
+            a: a.into(),
+            b: b.into(),
+        }
+    }
 }
 
 impl std::fmt::Display for Binomial {
@@ -28,7 +43,10 @@ impl TryFrom<&[Term]> for Binomial {
     type Error = ();
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
-        if value.len() < 3 || value[0] == Term::zero() && value.len() < 4 {
+        if value.len() < 3 {
+            return Err(());
+        }
+        if value[0] == Term::zero() && value[0] != value[1] && value.len() < 4 {
             return Err(());
         }
 
@@ -39,24 +57,17 @@ impl TryFrom<&[Term]> for Binomial {
         // a = (y - z) / (x - y)
 
         let seq = if value[0] == value[1] && value[1] == value[2] {
-            Self {
-                start: value[0],
-                a: Term::zero(),
-                b: value[0],
-            }
+            Self::new(value[0], 0, value[0])
         } else if value[0] == value[1] {
             Err(())?
         } else {
             let a = (value[1] - value[2]) / (value[0] - value[1]);
             let b = value[1] - a * value[0];
+            // b should be an integer
             if b.denom() != Some(&1) {
                 Err(())?;
             }
-            Self {
-                start: value[0],
-                a,
-                b,
-            }
+            Self::new(value[0], a, b)
         };
 
         if seq.clone().zip(value.iter()).skip(2).all(|(a, b)| a == *b) {

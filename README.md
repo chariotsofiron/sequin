@@ -1,13 +1,13 @@
 # Sequin
 
-A library for identifying sequences of rational numbers. It tries to find the simplest rule that fits the observed sequence. Probably not very useful but I've had to solve many of these in online assessments and wondered how much it could be automated.
+Sequin is a program for identifying sequences of rational numbers. It tries to find the simplest rule that fits the observed numbers.  After being asked to solve many "find the next number" problems, I wondered how much of it could be automated.
 
 
 # Sequences
 
 - Binomial: `S(n) = a*S(n-1) + b`
-- Alternator: `S(n) = a*S(n-1) + b if n|2 else c*S(n-1) + d`
-- Fibonacci: `S(n) = a*S(n-2) + b*S(n-1) + c`
+- Alternator: `S(n) = if n|2 {a*S(n-1) + b} else {c*S(n-1) + d}`
+- Fibonacci: `S(n) = a*S(n-2) + b*S(n-1)`
 - Factor
 - Difference
 - Zipped

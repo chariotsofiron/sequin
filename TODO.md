@@ -1,5 +1,7 @@
 - [ ] implement double-ended iterator for sequences
+- [ ] solve alternator directly instead of trial and error
 - [ ] improve OEIS
-- [ ] Letter sequences
+- [ ] Letter sequences (map char to number, solve, map back)
+- [ ] support ? in sequences to solve for missing values
   - C, F, I, L, O, R
   - J, F, M, A, M, J, J, A, S, O, N, D

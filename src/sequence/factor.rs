@@ -6,8 +6,20 @@ use super::{binom::Binomial, Sequence};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Factor {
-    pub start: Term,
-    pub seq: Box<Sequence>,
+    start: Term,
+    seq: Box<Sequence>,
+}
+
+impl Factor {
+    pub fn new<A>(start: A, seq: Sequence) -> Self
+    where
+        A: Into<Term>,
+    {
+        Self {
+            start: start.into(),
+            seq: Box::new(seq),
+        }
+    }
 }
 
 impl std::fmt::Display for Factor {
@@ -29,15 +41,8 @@ impl TryFrom<&[Term]> for Factor {
             .collect::<Option<Vec<_>>>()
             .ok_or(())?;
 
-        #[allow(clippy::option_if_let_else)]
-        if let Ok(seq) = Binomial::try_from(diffs.as_slice()) {
-            Ok(Self {
-                start: value[0],
-                seq: Box::new(Sequence::Binomial(seq)),
-            })
-        } else {
-            Err(())
-        }
+        let seq = Binomial::try_from(diffs.as_slice())?;
+        Ok(Self::new(value[0], Sequence::Binomial(seq)))
     }
 }
 

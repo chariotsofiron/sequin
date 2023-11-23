@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
 use crate::Term;
@@ -58,8 +59,11 @@ impl TryFrom<&[Term]> for Oeis {
             })
             .collect::<Result<Vec<_>, _>>()?;
 
-        // query oeis.org
-        let nums: String = numbers.iter().map(|x| format!("{x},")).collect();
+        let nums: String = numbers
+            .iter()
+            .map(std::string::ToString::to_string)
+            .join(",");
+
         let url = format!("https://oeis.org/search?q={nums}&fmt=json");
         let response: Root = ureq::get(&url)
             .call()
