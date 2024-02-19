@@ -64,7 +64,7 @@ impl TryFrom<&[Term]> for Binomial {
             let a = (value[1] - value[2]) / (value[0] - value[1]);
             let b = value[1] - a * value[0];
             // b should be an integer
-            if b.denom() != Some(&1) {
+            if b.denom() != &1 {
                 Err(())?;
             }
             Self::new(value[0], a, b)

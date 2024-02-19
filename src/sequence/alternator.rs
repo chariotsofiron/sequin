@@ -2,7 +2,7 @@
 use fraction::Zero;
 use itertools::iproduct;
 
-use crate::Term;
+use crate::{Size, Term};
 
 /// Sequence produced by alternating an operation
 /// a(n) = a * x(n-1) + b if n odd
@@ -62,8 +62,8 @@ impl TryFrom<&[Term]> for Alternator {
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         // 0, 1, 2, ..., 1/2, 2/2, 3/2, ..., 1/3, 2/3, 3/3, ...
-        const NUMERATOR_RANGE: std::ops::Range<i32> = 1..10;
-        const DENOMINATOR_RANGE: std::ops::Range<i32> = 1..12;
+        const NUMERATOR_RANGE: std::ops::Range<Size> = 1..10;
+        const DENOMINATOR_RANGE: std::ops::Range<Size> = 1..12;
 
         if value.len() < 4 {
             return Err(());
@@ -71,7 +71,7 @@ impl TryFrom<&[Term]> for Alternator {
         let fractions = iproduct!(DENOMINATOR_RANGE, NUMERATOR_RANGE, [false, true]).map(
             |(b, a, is_signed)| {
                 if is_signed {
-                    Term::new_neg(a, b)
+                    Term::new(-a, b)
                 } else {
                     Term::new(a, b)
                 }

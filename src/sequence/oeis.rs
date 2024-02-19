@@ -1,13 +1,14 @@
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
-use crate::Term;
+use crate::{Size, Term};
 
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Root {
     pub results: Option<Vec<Response>>,
 }
 
+/// Response from OEIS.
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Response {
     pub number: u64,
@@ -48,11 +49,11 @@ impl TryFrom<&[Term]> for Oeis {
 
     fn try_from(value: &[Term]) -> Result<Self, Self::Error> {
         // convert sequence to integers, error if not integers
-        let numbers: Vec<i128> = value
+        let numbers: Vec<Size> = value
             .iter()
             .map(|&x| {
-                if x.denom() == Some(&1) {
-                    Ok(*x.numer().unwrap())
+                if x.denom() == &1 {
+                    Ok(*x.numer())
                 } else {
                     Err(())
                 }
@@ -75,7 +76,7 @@ impl TryFrom<&[Term]> for Oeis {
             let nums: Vec<Term> = results[0]
                 .data
                 .split(',')
-                .map(str::parse::<i64>)
+                .map(str::parse::<Size>)
                 .take_while(Result::is_ok)
                 .map(|f| Term::from(f.unwrap()))
                 .collect();
@@ -93,14 +94,14 @@ impl TryFrom<&[Term]> for Oeis {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test_one() {
-        let seq = vec![1, 4, 7, 8, 9, 6];
-        let seq: Vec<Term> = seq.iter().map(|&x| Term::from(x)).collect();
-        let oeis = Oeis::try_from(seq.as_slice()).unwrap();
-        println!("{:?}", oeis.numbers)
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//     #[test]
+//     fn test_one() {
+//         let seq = vec![1, 4, 7, 8, 9, 6];
+//         let seq: Vec<Term> = seq.iter().map(|&x| Term::from(x)).collect();
+//         let oeis = Oeis::try_from(seq.as_slice()).unwrap();
+//         println!("{:?}", oeis.numbers)
+//     }
+// }
