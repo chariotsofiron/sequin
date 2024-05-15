@@ -1,6 +1,6 @@
 # Sequin
 
-Sequin is a program for identifying sequences of rational numbers. It tries to find the simplest rule that fits the observed numbers. It also supports characters by mapping them to integers. After being asked to solve many "find the next number" problems, I wondered how much of it could be automated.
+Sequin is a program for identifying sequences of rational numbers. It tries to find the simplest rule that fits the observed numbers.
 
 
 ## Examples
